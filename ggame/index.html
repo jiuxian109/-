@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>🐉 奶龙弹射</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="stage">
+  <canvas id="game" width="960" height="540"></canvas>
+</div>
+
+<!-- 开始界面 -->
+<div id="startOverlay" class="overlay">
+  <div class="panel">
+    <div class="title">🐉 奶龙弹射</div>
+    <div class="sub">拖住奶龙头往后拉，松手发射</div>
+    <div class="sub">把堆叠的木块全部击倒，即可通关！</div>
+    <div class="hint">共 4 关 · 关卡递进 · 评分星级</div>
+    <button id="startBtn" class="btn">▶ 开始游戏</button>
+  </div>
+</div>
+
+<!-- 过关界面 -->
+<div id="levelOverlay" class="overlay hidden">
+  <div class="panel">
+    <div class="title" id="levelTitle">第 1 关 通过！</div>
+    <div class="stars" id="levelStars">
+      <span class="on">★</span><span class="off">★</span><span class="off">★</span>
+    </div>
+    <div class="sub" id="levelScore">得分 0</div>
+    <button id="nextBtn" class="btn">▶ 下一关</button>
+    <button id="replayLevelBtn" class="btn small ghost">🔄 重玩本关</button>
+  </div>
+</div>
+
+<!-- 失败界面 -->
+<div id="loseOverlay" class="overlay hidden">
+  <div class="panel">
+    <div class="title">😢 差一点</div>
+    <div class="sub">木块没有全部击倒</div>
+    <button id="retryBtn" class="btn">🔄 再来一次</button>
+  </div>
+</div>
+
+<!-- 视频小窗 -->
+<div id="videoOverlay" class="overlay hidden">
+  <div class="popup" id="popup">
+    <div class="popup-title" id="popupDrag">🏆 全部通关！</div>
+    <button class="popup-close" id="popupClose" title="关闭">✕</button>
+    <div class="video-wrap">
+      <video id="winVideo" src="assets/video_20261012_175751.mp4" controls playsinline preload="auto"></video>
+      <div id="playHint" class="hidden"><span>▶ 点击播放</span></div>
+    </div>
+    <div class="popup-actions">
+      <button id="replayBtn" class="btn small">🔄 从头开始</button>
+    </div>
+  </div>
+</div>
+
+<script src="lib/matter.min.js"></script>
+<script src="game.js"></script>
+</body>
+</html>
