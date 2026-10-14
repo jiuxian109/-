@@ -7,6 +7,7 @@
 
   const canvas = document.getElementById('game');
   const ctx = canvas.getContext('2d');
+  const pvInfoEl = document.getElementById('pvInfo');   // 竖屏游玩时画面下方的 DOM 信息条
 
   // ---------- Matter 初始化 ----------
   const { Engine, Bodies, Body, Composite, Events } = Matter;
@@ -368,8 +369,12 @@
   function slingHit(p) {
     if (Math.abs(p.x - slingX) > touchHit(34, PRONG_DX + 28)) return false;
     const pad = touchUI ? 12 : 0;   // 触屏上下各放宽一点，手指没那么准
-    const aboveProng = p.y >= PRONG_L.y - 24 - pad && p.y <= POCKET.y - BIRD_R + 2;
-    const belowBird = p.y >= POCKET.y + BIRD_R - 2 && p.y <= SLING_BASE.y + 16 + pad;
+    // 奶龙自己那条「专属竖带」：屏幕越小越要按 CSS 尺寸撑开 ——
+    // 竖屏游玩时画面只有屏幕宽度的 2/5，不撑开的话手指点在奶龙身上会抓到弹弓。
+    // 横屏手机算出来还是 26，桌面端完全不变。
+    const band = touchUI ? Math.max(BIRD_R, cssPx(17)) : BIRD_R;
+    const aboveProng = p.y >= PRONG_L.y - 24 - pad && p.y <= POCKET.y - band + 2;
+    const belowBird = p.y >= POCKET.y + band - 2 && p.y <= SLING_BASE.y + 16 + pad;
     return aboveProng || belowBird;
   }
 
@@ -1099,7 +1104,15 @@
     }
     ctx.globalAlpha = 1;
   }
+  let lastPvInfo = '';
+  function syncPvInfo() {
+    if (!pvInfoEl || !document.body.classList.contains('pv')) return;
+    const s = LEVELS[levelIndex].name + ' · 剩余 × ' + shotsLeft + ' · 得分 ' + score;
+    if (s !== lastPvInfo) { lastPvInfo = s; pvInfoEl.textContent = s; }
+  }
   function drawHUD() {
+    // 竖屏游玩：画面只有屏幕宽度的 2/5，画布上的字小到看不清 —— 整条 HUD 交给下面的 DOM 信息条
+    if (document.body.classList.contains('pv')) { syncPvInfo(); return; }
     chip(12, 12, 200, 34, 'DDD · ' + LEVELS[levelIndex].name);
     chip(12, 50, 130, 34, '得分 ' + score);
     if (touchUI) {
@@ -1291,6 +1304,25 @@
     syncBar();
     // 手机上禁掉长按弹出的系统菜单（选择/分享），免得拉弓拉到一半被打断
     if (touchUI) document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+  })();
+
+  // ---------- 竖屏游玩（点了「仍要竖屏玩」之后给 body 加 .pv）----------
+  (function () {
+    const ro = document.getElementById('rotateOverlay');
+    const btn = document.getElementById('portraitPlay');
+    if (!ro || !btn) return;
+    btn.addEventListener('click', function () {
+      document.body.classList.add('pv');
+      ensureAudio(); sClick();
+    });
+    // 转回横屏就把状态清掉 —— 按「不记住」的要求，再转回竖屏时会重新问一次
+    let mq = null;
+    try { mq = window.matchMedia('(orientation: portrait)'); } catch (err) { mq = null; }
+    if (mq) {
+      const onChange = function () { if (!mq.matches) document.body.classList.remove('pv'); };
+      if (mq.addEventListener) mq.addEventListener('change', onChange);
+      else if (mq.addListener) mq.addListener(onChange);
+    }
   })();
 
   // 小窗拖拽

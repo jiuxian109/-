@@ -19,6 +19,9 @@
   <button id="tbRestart" class="tbtn" title="重来">↻</button>
 </div>
 
+<!-- 竖屏游玩时的信息条：竖屏画面只有屏幕宽度的 2/5，画布上的字看不清，把信息搬到下面的操作区 -->
+<div id="pvInfo"></div>
+
 <!-- 开始界面 -->
 <div id="startOverlay" class="overlay">
   <div class="panel">
@@ -74,6 +77,7 @@
   <div class="rot-icon">📱</div>
   <div class="rot-text">请把手机横过来</div>
   <div class="rot-sub">这个游戏是 16:9 横向的，横屏才有足够的操作空间</div>
+  <button id="portraitPlay" class="rot-play">仍要竖屏玩</button>
 </div>
 
 <script src="lib/matter.min.js"></script>
