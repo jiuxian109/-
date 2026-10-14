@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DDD · 四关布局设计（水墨国风）</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #ece8de;
+    font-family: "Segoe UI", "Microsoft YaHei", "KaiTi", "STKaiti", system-ui, sans-serif;
+    padding: 36px 16px 70px; color: #2b2822;
+  }
+  .sheet {
+    max-width: 1140px; margin: 0 auto; background: #fbf8f0;
+    border-radius: 20px; box-shadow: 0 20px 60px rgba(40, 34, 24, 0.14);
+    padding: 34px 38px 44px; border: 1px solid #e3dcc9;
+  }
+  header { text-align: center; margin-bottom: 26px; }
+  header h1 { font-size: 28px; font-weight: 800; letter-spacing: 3px; }
+  header .sub { font-size: 14px; color: #6b655a; margin-top: 8px; letter-spacing: 1px; }
+  .tag-row { margin-top: 12px; }
+  .tag {
+    display: inline-block; font-size: 12px; font-weight: 700; color: #7a5230;
+    background: #f3ead6; border: 1px solid #d8c7a6;
+    padding: 4px 12px; border-radius: 999px; margin: 4px 4px 0;
+  }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+  .card { background: #fffdf7; border: 1px solid #e3dcc9; border-radius: 14px; padding: 14px 14px 16px; }
+  .card h3 { font-size: 15px; font-weight: 800; letter-spacing: 1px; }
+  .card .meta { font-size: 12px; color: #6b655a; margin: 4px 0 10px; letter-spacing: .5px; }
+  .card .meta b { color: #7a5230; }
+
+  /* 迷你场景：游戏坐标 ÷2（960×540 → 480×270） */
+  .mini {
+    position: relative; width: 480px; height: 270px; max-width: 100%;
+    border-radius: 10px; overflow: hidden;
+    background: linear-gradient(180deg, #faf5e8, #f4ecd9 55%, #ece3cb);
+    box-shadow: inset 0 0 40px rgba(120, 100, 70, 0.10);
+  }
+  .mini .far {
+    position: absolute; left: 0; right: 0; bottom: 0; height: 76px;
+    background: linear-gradient(180deg, rgba(140,131,116,0), rgba(140,131,116,0.14) 40%, rgba(140,131,116,0.34));
+  }
+  .mini .sun {
+    position: absolute; width: 26px; height: 26px; border-radius: 50%;
+    background: rgba(192, 57, 43, 0.9);
+    box-shadow: 0 0 16px rgba(192, 57, 43, 0.28);
+  }
+  .isl {
+    position: absolute;
+    background: linear-gradient(180deg, #7a9c80, #5f8470 55%, #3f5f52);
+    clip-path: polygon(6% 0, 94% 0, 100% 74%, 82% 100%, 18% 100%, 0 74%);
+  }
+  .isl::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 0; height: 22%;
+    background: linear-gradient(180deg, #93ad76, #6d8a58);
+  }
+  .blk {
+    position: absolute; width: 22px; height: 22px;
+    background: linear-gradient(180deg, #c29a6b, #9a7048);
+    border: 1.5px solid #6f5438; border-radius: 2px;
+  }
+  .sling { position: absolute; }
+  .bird {
+    position: absolute; width: 22px; height: 19px;
+    filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.25));
+  }
+  .arc { position: absolute; left: 0; top: 0; width: 480px; height: 270px; pointer-events: none; }
+  .h-line {
+    position: absolute; left: 0; right: 0; border-top: 1px dashed rgba(120, 110, 95, 0.25);
+  }
+  .h-line span {
+    position: absolute; right: 4px; top: -14px; font-size: 9px;
+    color: #8a8374; letter-spacing: .5px;
+  }
+
+  h2 { font-size: 17px; font-weight: 800; margin: 30px 0 14px; text-align: center; letter-spacing: 2px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 10px 24px; justify-content: center; margin-bottom: 6px; }
+  .legend .item { font-size: 13px; color: #3a352c; display: flex; align-items: center; gap: 8px; }
+  .legend .dot { width: 14px; height: 14px; border-radius: 4px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.10); }
+  .notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; }
+  .note { background: #f7f2e6; border: 1px solid #e8e0cd; border-radius: 12px; padding: 14px 16px; }
+  .note b { display: block; font-size: 14px; margin-bottom: 6px; }
+  .note p { font-size: 13px; color: #5b5548; line-height: 1.7; }
+
+  @media (max-width: 1040px) {
+    .grid { grid-template-columns: 1fr; }
+    .mini { transform: scale(0.92); transform-origin: top left; margin-bottom: -22px; }
+  }
+  @media (max-width: 560px) {
+    .sheet { padding: 22px 16px 30px; }
+    .mini { transform: scale(0.62); transform-origin: top left; margin-bottom: -103px; }
+  }
+</style>
+</head>
+<body>
+
+<svg style="display:none" aria-hidden="true">
+  <symbol id="sling" viewBox="0 0 45 72">
+    <path d="M24.5 64 C23 44 19 30 8 6" stroke="#1e1b18" stroke-width="8" stroke-linecap="round" fill="none"/>
+    <path d="M24.5 64 C26 44 30 30 41 6" stroke="#1e1b18" stroke-width="8" stroke-linecap="round" fill="none"/>
+    <path d="M24.5 68 L24.5 42" stroke="#1e1b18" stroke-width="9" stroke-linecap="round"/>
+    <path d="M8 6 Q24.5 13 41 6" stroke="#f2736a" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+    <path d="M8 6 Q6 38 24.5 38 Q43 38 41 6" stroke="#f2736a" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".8"/>
+    <circle cx="24.5" cy="38" r="3" fill="#f2736a"/>
+  </symbol>
+</svg>
+
+<div class="sheet">
+  <header>
+    <h1>🐉 DDD · 四关布局设计</h1>
+    <div class="sub">浮空岛与木块抬升至中上部 · 高低错落 · 水墨国风</div>
+    <div class="tag-row">
+      <span class="tag">木块离底抬高</span>
+      <span class="tag">浮空岛多层高度</span>
+      <span class="tag">抛物线难度递进</span>
+      <span class="tag">青绿山石</span>
+    </div>
+  </header>
+
+  <div class="grid">
+
+    <!-- ============ 第 1 关 ============ -->
+    <div class="card">
+      <h3>第 1 关 · 云间初试</h3>
+      <div class="meta">奶龙 ×3 · 木块 <b>6</b> · 目标岛 top=390（中下部）</div>
+      <div class="mini">
+        <div class="far"></div>
+        <div class="sun" style="left:28px;top:22px;"></div>
+        <div class="h-line" style="top:117px;"><span>中线 y=270</span></div>
+        <div class="isl" style="left:-5px;top:235px;width:160px;height:60px;"></div>
+        <div class="isl" style="left:245px;top:195px;width:150px;height:50px;"></div>
+        <i class="blk" style="left:287px;top:173px;"></i>
+        <i class="blk" style="left:309px;top:173px;"></i>
+        <i class="blk" style="left:331px;top:173px;"></i>
+        <i class="blk" style="left:298px;top:151px;"></i>
+        <i class="blk" style="left:320px;top:151px;"></i>
+        <i class="blk" style="left:309px;top:129px;"></i>
+        <svg class="sling" style="left:68px;top:170px;" width="45" height="72"><use href="#sling"/></svg>
+        <img class="bird" src="assets/nailong_head.png" alt="" style="left:79px;top:186px;">
+        <svg class="arc" viewBox="0 0 480 270"><path d="M104 196 Q200 84 296 162" fill="none" stroke="rgba(60,55,45,.38)" stroke-width="1.6" stroke-dasharray="5 5"/></svg>
+      </div>
+    </div>
+
+    <!-- ============ 第 2 关 ============ -->
+    <div class="card">
+      <h3>第 2 关 · 叠叠高</h3>
+      <div class="meta">奶龙 ×3 · 木块 <b>9</b> · 双岛 top=440 / 300（一低一高）</div>
+      <div class="mini">
+        <div class="far"></div>
+        <div class="sun" style="left:28px;top:22px;"></div>
+        <div class="h-line" style="top:117px;"><span>中线 y=270</span></div>
+        <div class="isl" style="left:-5px;top:235px;width:160px;height:60px;"></div>
+        <div class="isl" style="left:215px;top:220px;width:130px;height:50px;"></div>
+        <div class="isl" style="left:395px;top:150px;width:90px;height:50px;"></div>
+        <i class="blk" style="left:247px;top:198px;"></i>
+        <i class="blk" style="left:269px;top:198px;"></i>
+        <i class="blk" style="left:291px;top:198px;"></i>
+        <i class="blk" style="left:258px;top:176px;"></i>
+        <i class="blk" style="left:280px;top:176px;"></i>
+        <i class="blk" style="left:269px;top:154px;"></i>
+        <i class="blk" style="left:408px;top:128px;"></i>
+        <i class="blk" style="left:430px;top:128px;"></i>
+        <i class="blk" style="left:419px;top:106px;"></i>
+        <svg class="sling" style="left:68px;top:170px;" width="45" height="72"><use href="#sling"/></svg>
+        <img class="bird" src="assets/nailong_head.png" alt="" style="left:79px;top:186px;">
+        <svg class="arc" viewBox="0 0 480 270">
+          <path d="M104 196 Q190 120 262 186" fill="none" stroke="rgba(60,55,45,.38)" stroke-width="1.6" stroke-dasharray="5 5"/>
+          <path d="M104 196 Q300 20 422 122" fill="none" stroke="rgba(192,57,43,.35)" stroke-width="1.6" stroke-dasharray="5 5"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- ============ 第 3 关 ============ -->
+    <div class="card">
+      <h3>第 3 关 · 一柱擎天</h3>
+      <div class="meta">奶龙 ×4 · 木块 <b>10</b> · 高塔 top=300（四层）</div>
+      <div class="mini">
+        <div class="far"></div>
+        <div class="sun" style="left:28px;top:22px;"></div>
+        <div class="h-line" style="top:117px;"><span>中线 y=270</span></div>
+        <div class="isl" style="left:-5px;top:235px;width:160px;height:60px;"></div>
+        <div class="isl" style="left:185px;top:150px;width:150px;height:50px;"></div>
+        <i class="blk" style="left:216px;top:128px;"></i>
+        <i class="blk" style="left:238px;top:128px;"></i>
+        <i class="blk" style="left:260px;top:128px;"></i>
+        <i class="blk" style="left:282px;top:128px;"></i>
+        <i class="blk" style="left:227px;top:106px;"></i>
+        <i class="blk" style="left:249px;top:106px;"></i>
+        <i class="blk" style="left:271px;top:106px;"></i>
+        <i class="blk" style="left:238px;top:84px;"></i>
+        <i class="blk" style="left:260px;top:84px;"></i>
+        <i class="blk" style="left:249px;top:62px;"></i>
+        <svg class="sling" style="left:68px;top:170px;" width="45" height="72"><use href="#sling"/></svg>
+        <img class="bird" src="assets/nailong_head.png" alt="" style="left:79px;top:186px;">
+        <svg class="arc" viewBox="0 0 480 270">
+          <path d="M104 196 Q170 40 238 122" fill="none" stroke="rgba(60,55,45,.38)" stroke-width="1.6" stroke-dasharray="5 5"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- ============ 第 4 关 ============ -->
+    <div class="card">
+      <h3>第 4 关 · 巅峰论道</h3>
+      <div class="meta">奶龙 ×5 · 木块 <b>16</b> · 双高塔 top=280 / 350（最高点 y=170）</div>
+      <div class="mini">
+        <div class="far"></div>
+        <div class="sun" style="left:28px;top:22px;"></div>
+        <div class="h-line" style="top:117px;"><span>中线 y=270</span></div>
+        <div class="isl" style="left:-5px;top:235px;width:160px;height:60px;"></div>
+        <div class="isl" style="left:190px;top:140px;width:120px;height:50px;"></div>
+        <div class="isl" style="left:385px;top:175px;width:110px;height:50px;"></div>
+        <i class="blk" style="left:217px;top:118px;"></i>
+        <i class="blk" style="left:239px;top:118px;"></i>
+        <i class="blk" style="left:261px;top:118px;"></i>
+        <i class="blk" style="left:228px;top:96px;"></i>
+        <i class="blk" style="left:250px;top:96px;"></i>
+        <i class="blk" style="left:239px;top:74px;"></i>
+        <i class="blk" style="left:396px;top:153px;"></i>
+        <i class="blk" style="left:418px;top:153px;"></i>
+        <i class="blk" style="left:440px;top:153px;"></i>
+        <i class="blk" style="left:462px;top:153px;"></i>
+        <i class="blk" style="left:407px;top:131px;"></i>
+        <i class="blk" style="left:429px;top:131px;"></i>
+        <i class="blk" style="left:451px;top:131px;"></i>
+        <i class="blk" style="left:418px;top:109px;"></i>
+        <i class="blk" style="left:440px;top:109px;"></i>
+        <i class="blk" style="left:429px;top:87px;"></i>
+        <svg class="sling" style="left:68px;top:170px;" width="45" height="72"><use href="#sling"/></svg>
+        <img class="bird" src="assets/nailong_head.png" alt="" style="left:79px;top:186px;">
+        <svg class="arc" viewBox="0 0 480 270">
+          <path d="M104 196 Q160 26 228 112" fill="none" stroke="rgba(60,55,45,.38)" stroke-width="1.6" stroke-dasharray="5 5"/>
+          <path d="M104 196 Q300 96 406 148" fill="none" stroke="rgba(192,57,43,.35)" stroke-width="1.6" stroke-dasharray="5 5"/>
+        </svg>
+      </div>
+    </div>
+
+  </div>
+
+  <h2>图例</h2>
+  <div class="legend">
+    <span class="item"><i class="dot" style="background:linear-gradient(180deg,#faf5e8,#ece3cb)"></i>宣纸底 · 留白</span>
+    <span class="item"><i class="dot" style="background:#c0392b;border-radius:50%"></i>朱砂太阳</span>
+    <span class="item"><i class="dot" style="background:linear-gradient(180deg,#93ad76,#5f8470)"></i>青绿山石浮空岛</span>
+    <span class="item"><i class="dot" style="background:linear-gradient(180deg,#c29a6b,#9a7048)"></i>赭木块堆叠</span>
+    <span class="item"><i class="dot" style="background:#4a3b2a"></i>竹制弹弓</span>
+    <span class="item"><i class="dot" style="background:rgba(60,55,45,.4)"></i>弹道示意</span>
+  </div>
+
+  <h2>设计要点</h2>
+  <div class="notes">
+    <div class="note"><b>木块抬离底部</b><p>目标岛由贴底（top=470）上移到 280～440，木块整体抬到屏幕中上部。最高点在第三关 y=146，射击需要精确的抛物线，画面也不再「一条地皮压到底」。</p></div>
+    <div class="note"><b>高低错落</b><p>每关的岛处于不同高度：第 1 关单岛中下；第 2 关一低一高形成纵深；第 3 关单座高塔；第 4 关双高塔。左右分列，逼玩家切换角度与力度。</p></div>
+    <div class="note"><b>难度递进</b><p>木块 6 → 9 → 10 → 16，奶龙 3 → 3 → 4 → 5。层数由两层金字塔长到四层高塔，越往上层越难够到，余弹决定星级。</p></div>
+    <div class="note"><b>弹弓岛不变</b><p>左下弹弓岛保持 top=470，作为固定发射台与视觉锚点；其余浮空岛悬空于画面中上部，垂藤苔点勾出水墨「悬空山石」的意境。</p></div>
+  </div>
+</div>
+</body>
+</html>

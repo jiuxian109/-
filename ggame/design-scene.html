@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DDD · 场景重设计（水墨国风）</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #ece8de;
+    font-family: "Segoe UI", "Microsoft YaHei", "KaiTi", "STKaiti", system-ui, sans-serif;
+    padding: 40px 16px 80px;
+    color: #2b2822;
+  }
+  .sheet {
+    max-width: 1040px;
+    margin: 0 auto;
+    background: #fbf8f0;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(40, 34, 24, 0.14);
+    padding: 36px 40px 44px;
+    border: 1px solid #e3dcc9;
+  }
+  header { text-align: center; margin-bottom: 28px; }
+  header h1 { font-size: 30px; font-weight: 800; letter-spacing: 3px; }
+  header .sub { font-size: 15px; color: #6b655a; margin-top: 8px; letter-spacing: 1px; }
+  .tag-row { margin-top: 14px; }
+  .tag {
+    display: inline-block;
+    font-size: 12px; font-weight: 700;
+    color: #7a5230;
+    background: #f3ead6;
+    border: 1px solid #d8c7a6;
+    padding: 4px 12px; border-radius: 999px; margin: 0 4px;
+  }
+
+  /* ---------- 场景画布 ---------- */
+  .scene-wrap { position: relative; width: 100%; }
+  .scene {
+    position: relative;
+    width: 960px; height: 540px;
+    max-width: 100%;
+    margin: 0 auto;
+    border-radius: 12px;
+    overflow: hidden;
+    /* 宣纸底：米白，带极淡的横向纸纹与边缘晕染 */
+    background:
+      radial-gradient(120% 80% at 50% -10%, #faf5e8 0%, #f4ecd9 55%, #ece3cb 100%);
+    box-shadow: inset 0 0 60px rgba(120, 100, 70, 0.10);
+  }
+  .scene::before {
+    content: ""; position: absolute; inset: 0;
+    background: repeating-linear-gradient(180deg, rgba(150,130,95,0.03) 0 1px, transparent 1px 3px);
+    pointer-events: none;
+  }
+  @media (max-width: 1000px) {
+    .scene { transform: scale(0.82); transform-origin: top center; margin-bottom: -90px; }
+  }
+  @media (max-width: 800px) {
+    .scene { transform: scale(0.62); transform-origin: top center; margin-bottom: -200px; }
+  }
+
+  /* 朱砂太阳（印章式圆 + 淡晕） */
+  .sun { position: absolute; left: 82px; top: 60px; width: 88px; height: 88px;
+    background: radial-gradient(circle, rgba(192,57,43,0.18) 0%, rgba(192,57,43,0) 70%); border-radius: 50%; }
+  .sun-core { position: absolute; inset: 18px; background: #c0392b; border-radius: 50%;
+    opacity: 0.92; box-shadow: 0 0 10px rgba(192,57,43,0.25); }
+
+  /* 淡墨晕染云 */
+  .cloud-ink { position: absolute; border-radius: 50%;
+    background: radial-gradient(circle, rgba(110,100,85,0.16), rgba(110,100,85,0));
+    filter: blur(5px); }
+
+  /* 远山（浓淡墨） */
+  .mountain { position: absolute; left: 0; right: 0; }
+
+  /* 青绿山石浮空岛 */
+  .island { position: absolute; }
+  .island .rock {
+    position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(180deg, #7a9c80 0%, #5f8470 60%, #3f5f52 100%);
+    clip-path: polygon(7% 0%, 93% 0%, 100% 72%, 82% 100%, 18% 100%, 0% 72%);
+  }
+  .island .rock::after {
+    content: ""; position: absolute; left: 6%; right: 6%; top: 10%; height: 26%;
+    background: radial-gradient(120% 90% at 50% 30%, rgba(240,220,170,0.35), rgba(240,220,170,0));
+  }
+  .island .grass {
+    position: absolute; left: -8px; top: -5px; width: calc(100% + 16px); height: 20px;
+    background: linear-gradient(180deg, #93ad76, #6d8a58);
+    border-radius: 10px 10px 0 0;
+    box-shadow: inset 0 -2px 0 rgba(0,0,0,0.10);
+  }
+  .island .moss { position: absolute; width: 14px; height: 14px; border-radius: 50%;
+    background: radial-gradient(circle, #5f8470, rgba(95,132,112,0)); }
+  .island .vine {
+    position: absolute; bottom: -22px; width: 5px;
+    background: linear-gradient(180deg, #4a5f52, #2f4138);
+    border-radius: 0 0 4px 4px;
+  }
+
+  /* 赭木块 */
+  .block {
+    position: absolute;
+    background: linear-gradient(180deg, #c29a6b, #9a7048);
+    border: 2px solid #6f5438;
+    border-radius: 3px;
+    box-shadow: inset 0 -4px 0 rgba(0,0,0,0.08), inset 0 2px 0 rgba(255,255,255,0.16);
+  }
+  .block::after {
+    content: ""; position: absolute; left: 5px; right: 5px; top: 50%;
+    height: 1px; background: rgba(90,66,40,0.32);
+  }
+
+  /* 印章 */
+  .seal {
+    position: absolute; background: #c0392b; color: #fdf8ef;
+    border-radius: 4px; text-align: center; font-weight: 800;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2); letter-spacing: 2px;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* 标注徽章 */
+  .pin {
+    position: absolute; min-width: 22px; height: 22px; line-height: 22px;
+    background: #fffdf7; color: #7a5230; font-size: 12px; font-weight: 800;
+    text-align: center; border-radius: 999px; padding: 0 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.18); border: 1px solid #d8c7a6;
+  }
+
+  /* ---------- 图例 & 配色 ---------- */
+  .legend { display: flex; flex-wrap: wrap; gap: 10px 26px; margin: 28px 0 6px; justify-content: center; }
+  .legend .item { font-size: 14px; color: #3a352c; display: flex; align-items: center; gap: 8px; }
+  .legend .dot { width: 14px; height: 14px; border-radius: 4px; flex: 0 0 auto;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,0.10); }
+
+  h2 { font-size: 17px; font-weight: 800; color: #2b2822; margin: 30px 0 14px; text-align: center; letter-spacing: 2px; }
+  .palette { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .swatch { border-radius: 12px; overflow: hidden; border: 1px solid #e3dcc9; background: #fffdf7; }
+  .swatch .color { height: 56px; }
+  .swatch .meta { padding: 8px 10px; }
+  .swatch .meta b { display: block; font-size: 13px; color: #2b2822; }
+  .swatch .meta span { font-size: 11px; color: #6b655a; }
+
+  .notes { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-top: 4px; }
+  .note { background: #f7f2e6; border: 1px solid #e8e0cd; border-radius: 12px; padding: 14px 16px; }
+  .note b { display: block; font-size: 14px; color: #2b2822; margin-bottom: 6px; }
+  .note p { font-size: 13px; color: #5b5548; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="sheet">
+  <header>
+    <h1>🐉 DDD · 场景重设计</h1>
+    <div class="sub">主题方向：水墨国风 —— 青绿山水 · 留白写意 · 朱砂点睛</div>
+    <div class="tag-row">
+      <span class="tag">宣纸底</span>
+      <span class="tag">青绿山石</span>
+      <span class="tag">浓淡墨远山</span>
+      <span class="tag">朱砂印章</span>
+    </div>
+  </header>
+
+  <div class="scene-wrap">
+    <div class="scene">
+
+      <!-- 朱砂太阳 -->
+      <div class="sun"><div class="sun-core"></div></div>
+
+      <!-- 淡墨晕染云 -->
+      <div class="cloud-ink" style="left:300px; top:70px; width:150px; height:60px;"></div>
+      <div class="cloud-ink" style="left:360px; top:40px; width:90px; height:50px;"></div>
+      <div class="cloud-ink" style="left:620px; top:120px; width:130px; height:54px;"></div>
+      <div class="cloud-ink" style="left:110px; top:170px; width:110px; height:46px;"></div>
+
+      <!-- 远山（浓淡墨三层） -->
+      <svg class="mountain" style="bottom:86px; height:150px;" viewBox="0 0 960 150" preserveAspectRatio="none">
+        <path d="M0 150 L0 100 Q150 46 300 96 Q460 30 620 96 Q780 54 960 100 L960 150 Z" fill="#b8b1a2" opacity="0.7"/>
+      </svg>
+      <svg class="mountain" style="bottom:70px; height:130px;" viewBox="0 0 960 130" preserveAspectRatio="none">
+        <path d="M0 130 L0 84 Q180 30 380 80 Q540 24 720 82 Q860 46 960 80 L960 130 Z" fill="#8a8374" opacity="0.85"/>
+      </svg>
+      <svg class="mountain" style="bottom:56px; height:110px;" viewBox="0 0 960 110" preserveAspectRatio="none">
+        <path d="M0 110 L0 68 Q200 20 420 70 Q600 26 800 72 Q890 50 960 68 L960 110 Z" fill="#5c574b" opacity="0.9"/>
+      </svg>
+
+      <!-- 浮空岛 1（弹弓岛） -->
+      <div class="island" style="left:-10px; top:452px; width:320px; height:88px;">
+        <div class="rock"></div>
+        <div class="grass"></div>
+        <div class="moss" style="left:60px; top:52px;"></div>
+        <div class="moss" style="left:248px; top:60px; width:10px; height:10px;"></div>
+        <div class="vine" style="left:46px;"></div>
+        <div class="vine" style="left:238px;"></div>
+      </div>
+
+      <!-- 浮空岛 2（金字塔岛） -->
+      <div class="island" style="left:490px; top:452px; width:300px; height:88px;">
+        <div class="rock"></div>
+        <div class="grass"></div>
+        <div class="moss" style="left:42px; top:48px;"></div>
+        <div class="moss" style="left:236px; top:56px;"></div>
+        <div class="vine" style="left:40px;"></div>
+        <div class="vine" style="left:230px;"></div>
+      </div>
+
+      <!-- 浮空岛 3（小塔岛） -->
+      <div class="island" style="left:770px; top:452px; width:180px; height:88px;">
+        <div class="rock"></div>
+        <div class="grass"></div>
+        <div class="moss" style="left:28px; top:52px;"></div>
+        <div class="vine" style="left:30px;"></div>
+      </div>
+
+      <!-- 木块金字塔（岛2，cx≈640） -->
+      <div class="block" style="left:573px; top:424px; width:46px; height:46px;"></div>
+      <div class="block" style="left:617px; top:424px; width:46px; height:46px;"></div>
+      <div class="block" style="left:661px; top:424px; width:46px; height:46px;"></div>
+      <div class="block" style="left:595px; top:378px; width:46px; height:46px;"></div>
+      <div class="block" style="left:639px; top:378px; width:46px; height:46px;"></div>
+      <div class="block" style="left:617px; top:332px; width:46px; height:46px;"></div>
+
+      <!-- 木块小塔（岛3，cx≈860） -->
+      <div class="block" style="left:815px; top:424px; width:46px; height:46px;"></div>
+      <div class="block" style="left:859px; top:424px; width:46px; height:46px;"></div>
+      <div class="block" style="left:837px; top:378px; width:46px; height:46px;"></div>
+
+      <!-- 水墨弹弓 -->
+      <svg style="position:absolute; left:150px; top:330px; width:80px; height:145px;" viewBox="0 0 80 145">
+        <path d="M35 138 C33 96 24 56 4 22" stroke="#1e1b18" stroke-width="13" stroke-linecap="round" fill="none"/>
+        <path d="M35 138 C37 96 46 56 66 22" stroke="#1e1b18" stroke-width="13" stroke-linecap="round" fill="none"/>
+        <path d="M35 142 L35 84" stroke="#1e1b18" stroke-width="16" stroke-linecap="round"/>
+        <path d="M4 22 Q35 38 66 22" stroke="#f2736a" stroke-width="6" fill="none" stroke-linecap="round"/>
+        <path d="M4 22 Q1 96 35 96 Q69 96 66 22" stroke="#f2736a" stroke-width="5" fill="none" stroke-linecap="round" opacity=".78"/>
+        <circle cx="35" cy="96" r="7" fill="#f2736a"/>
+      </svg>
+
+      <!-- 奶龙 -->
+      <img src="assets/nailong_head.png" alt="奶龙" style="position:absolute; left:222px; top:436px; width:54px; height:46px; filter: drop-shadow(0 4px 5px rgba(0,0,0,0.28));">
+
+      <!-- 墨色飞鸟 -->
+      <svg style="position:absolute; left:430px; top:210px; width:60px; height:30px;" viewBox="0 0 60 30">
+        <g stroke="#3a352c" stroke-width="2.5" fill="none" stroke-linecap="round">
+          <path d="M4 18 Q12 8 20 16"/>
+          <path d="M20 16 Q28 8 36 18"/>
+          <path d="M36 20 Q44 12 52 22"/>
+        </g>
+      </svg>
+      <svg style="position:absolute; left:520px; top:190px; width:40px; height:22px;" viewBox="0 0 40 22">
+        <g stroke="#4a463d" stroke-width="2.2" fill="none" stroke-linecap="round">
+          <path d="M2 14 Q9 6 16 13"/>
+          <path d="M16 13 Q23 6 30 14"/>
+        </g>
+      </svg>
+
+      <!-- 朱砂印章 -->
+      <div class="seal" style="right:28px; bottom:24px; width:58px; height:58px; font-size:20px;">DDD</div>
+
+      <!-- 标注 -->
+      <div class="pin" style="left:140px; top:44px;">② 朱砂日</div>
+      <div class="pin" style="left:352px; top:96px;">③ 淡墨云</div>
+      <div class="pin" style="left:84px; top:470px;">⑤ 青绿山石</div>
+      <div class="pin" style="left:584px; top:306px;">⑥ 木块堆叠</div>
+      <div class="pin" style="left:150px; top:320px;">⑦ 竹弹弓</div>
+      <div class="pin" style="left:258px; top:414px;">⑧ 奶龙</div>
+    </div>
+  </div>
+
+  <h2>场景图例</h2>
+  <div class="legend">
+    <span class="item"><i class="dot" style="background:linear-gradient(180deg,#faf5e8,#ece3cb)"></i>① 宣纸底 · 留白</span>
+    <span class="item"><i class="dot" style="background:#c0392b"></i>② 朱砂太阳</span>
+    <span class="item"><i class="dot" style="background:#a39a89"></i>③ 淡墨晕染云</span>
+    <span class="item"><i class="dot" style="background:#5c574b"></i>④ 浓淡墨远山</span>
+    <span class="item"><i class="dot" style="background:#5f8470"></i>⑤ 青绿山石浮空岛</span>
+    <span class="item"><i class="dot" style="background:#c29a6b"></i>⑥ 赭木块堆叠</span>
+    <span class="item"><i class="dot" style="background:#4a3b2a"></i>⑦ 竹制弹弓</span>
+    <span class="item"><i class="dot" style="background:#93ad76"></i>⑧ 奶龙 · 苔点</span>
+  </div>
+
+  <h2>配色板</h2>
+  <div class="palette">
+    <div class="swatch"><div class="color" style="background:linear-gradient(180deg,#faf5e8,#f4ecd9,#ece3cb)"></div><div class="meta"><b>宣纸底</b><span>#faf5e8 → #ece3cb</span></div></div>
+    <div class="swatch"><div class="color" style="background:#c0392b"></div><div class="meta"><b>朱砂</b><span>#c0392b</span></div></div>
+    <div class="swatch"><div class="color" style="background:linear-gradient(180deg,#b8b1a2,#5c574b)"></div><div class="meta"><b>浓淡墨远山</b><span>#b8b1a2 → #5c574b</span></div></div>
+    <div class="swatch"><div class="color" style="background:linear-gradient(180deg,#7a9c80,#3f5f52)"></div><div class="meta"><b>青绿山石</b><span>#7a9c80 → #3f5f52</span></div></div>
+    <div class="swatch"><div class="color" style="background:linear-gradient(180deg,#93ad76,#6d8a58)"></div><div class="meta"><b>苔草</b><span>#93ad76 → #6d8a58</span></div></div>
+    <div class="swatch"><div class="color" style="background:linear-gradient(180deg,#c29a6b,#9a7048)"></div><div class="meta"><b>赭木块</b><span>#c29a6b → #9a7048</span></div></div>
+    <div class="swatch"><div class="color" style="background:#4a3b2a"></div><div class="meta"><b>竹木弹弓</b><span>#4a3b2a · #5a4632</span></div></div>
+    <div class="swatch"><div class="color" style="background:#5f8470"></div><div class="meta"><b>苔点</b><span>#5f8470</span></div></div>
+  </div>
+
+  <h2>设计要点</h2>
+  <div class="notes">
+    <div class="note"><b>宣纸留白</b><p>天空用米白宣纸底，大量留白，仅在底部与远山处着墨，营造「疏可走马」的写意呼吸感，与水墨气质契合。</p></div>
+    <div class="note"><b>青绿山石</b><p>浮空岛化为青绿山水中的「悬空山石」——上平下收、苔点垂藤、顶部覆草，仿王希孟青绿山水的石色。</p></div>
+    <div class="note"><b>浓淡墨层次</b><p>远山分三层由淡到浓，云用淡墨晕染，飞鸟以寥寥数笔点出，拉开纵深同时保持留白。</p></div>
+    <div class="note"><b>朱砂点睛</b><p>太阳与右下角印章都用朱砂红，成为整幅灰绿调里唯一亮色，点睛提气；玩法与堆叠结构保持不变。</p></div>
+  </div>
+</div>
+</body>
+</html>

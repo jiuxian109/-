@@ -1,4 +1,4 @@
-/* 奶龙弹射 —— 撞落木块闯关（多关卡 · 把木块撞下浮空岛 · 评分星级） */
+/* DDD —— 弹射撞倒木块闯关（多关卡 · 水墨国风 · 评分星级） */
 (function () {
   'use strict';
 
@@ -17,8 +17,8 @@
 
   // ---------- 弹弓 ----------
   const SLING_BASE = { x: 185, y: 470 };
-  const PRONG_L = { x: 166, y: 355 };
-  const PRONG_R = { x: 204, y: 355 };
+  const PRONG_L = { x: 152, y: 350 };
+  const PRONG_R = { x: 218, y: 350 };
   const ANCHOR = { x: 185, y: 360 };
   const POCKET = { x: 185, y: 384 };
   const MAX_DRAG = 130;
@@ -77,21 +77,22 @@
 
   // ---------- 关卡定义 ----------
   // islands: 浮空岛（静态），blocks 坐标即其中心（木块中心）。
+  // 浮空岛不再固定贴底，分布在不同高度，木块随之抬升到中上部。
   const LEVELS = [
     {
-      name: '第 1 关 · 初出茅庐',
+      name: '第 1 关 · 云间初试',
       birds: 3,
       islands: [
         { cx: 150, top: 470, w: 320, h: 120 },
-        { cx: 640, top: 470, w: 300, h: 100 }
+        { cx: 640, top: 390, w: 300, h: 100 }
       ],
       blocks: [
-        { x: 596, y: 448, w: 44, h: 44 },
-        { x: 640, y: 448, w: 44, h: 44 },
-        { x: 684, y: 448, w: 44, h: 44 },
-        { x: 618, y: 404, w: 44, h: 44 },
-        { x: 662, y: 404, w: 44, h: 44 },
-        { x: 640, y: 360, w: 44, h: 44 }
+        { x: 596, y: 368, w: 44, h: 44 },
+        { x: 640, y: 368, w: 44, h: 44 },
+        { x: 684, y: 368, w: 44, h: 44 },
+        { x: 618, y: 324, w: 44, h: 44 },
+        { x: 662, y: 324, w: 44, h: 44 },
+        { x: 640, y: 280, w: 44, h: 44 }
       ]
     },
     {
@@ -99,70 +100,66 @@
       birds: 3,
       islands: [
         { cx: 150, top: 470, w: 320, h: 120 },
-        { cx: 560, top: 470, w: 260, h: 100 },
-        { cx: 860, top: 470, w: 180, h: 100 }
+        { cx: 560, top: 440, w: 260, h: 100 },
+        { cx: 880, top: 300, w: 180, h: 100 }
       ],
       blocks: [
-        { x: 516, y: 448, w: 44, h: 44 },
-        { x: 560, y: 448, w: 44, h: 44 },
-        { x: 604, y: 448, w: 44, h: 44 },
-        { x: 538, y: 404, w: 44, h: 44 },
-        { x: 582, y: 404, w: 44, h: 44 },
-        { x: 560, y: 360, w: 44, h: 44 },
-        { x: 838, y: 448, w: 44, h: 44 },
-        { x: 882, y: 448, w: 44, h: 44 },
-        { x: 860, y: 404, w: 44, h: 44 }
+        { x: 516, y: 418, w: 44, h: 44 },
+        { x: 560, y: 418, w: 44, h: 44 },
+        { x: 604, y: 418, w: 44, h: 44 },
+        { x: 538, y: 374, w: 44, h: 44 },
+        { x: 582, y: 374, w: 44, h: 44 },
+        { x: 560, y: 330, w: 44, h: 44 },
+        { x: 838, y: 278, w: 44, h: 44 },
+        { x: 882, y: 278, w: 44, h: 44 },
+        { x: 860, y: 234, w: 44, h: 44 }
       ]
     },
     {
-      name: '第 3 关 · 双塔阵',
+      name: '第 3 关 · 一柱擎天',
       birds: 4,
       islands: [
         { cx: 150, top: 470, w: 320, h: 120 },
-        { cx: 540, top: 470, w: 300, h: 100 },
-        { cx: 880, top: 470, w: 200, h: 100 }
+        { cx: 520, top: 300, w: 300, h: 100 }
       ],
       blocks: [
-        { x: 474, y: 448, w: 44, h: 44 },
-        { x: 518, y: 448, w: 44, h: 44 },
-        { x: 562, y: 448, w: 44, h: 44 },
-        { x: 606, y: 448, w: 44, h: 44 },
-        { x: 496, y: 404, w: 44, h: 44 },
-        { x: 540, y: 404, w: 44, h: 44 },
-        { x: 584, y: 404, w: 44, h: 44 },
-        { x: 518, y: 360, w: 44, h: 44 },
-        { x: 562, y: 360, w: 44, h: 44 },
-        { x: 540, y: 316, w: 44, h: 44 },
-        { x: 858, y: 448, w: 44, h: 44 },
-        { x: 902, y: 448, w: 44, h: 44 },
-        { x: 880, y: 404, w: 44, h: 44 }
+        { x: 454, y: 278, w: 44, h: 44 },
+        { x: 498, y: 278, w: 44, h: 44 },
+        { x: 542, y: 278, w: 44, h: 44 },
+        { x: 586, y: 278, w: 44, h: 44 },
+        { x: 476, y: 234, w: 44, h: 44 },
+        { x: 520, y: 234, w: 44, h: 44 },
+        { x: 564, y: 234, w: 44, h: 44 },
+        { x: 498, y: 190, w: 44, h: 44 },
+        { x: 542, y: 190, w: 44, h: 44 },
+        { x: 520, y: 146, w: 44, h: 44 }
       ]
     },
     {
-      name: '第 4 关 · 金字塔之巅',
+      name: '第 4 关 · 巅峰论道',
       birds: 5,
       islands: [
         { cx: 150, top: 470, w: 320, h: 120 },
-        { cx: 470, top: 470, w: 240, h: 100 },
-        { cx: 880, top: 470, w: 220, h: 100 }
+        { cx: 500, top: 280, w: 240, h: 100 },
+        { cx: 880, top: 350, w: 220, h: 100 }
       ],
       blocks: [
-        { x: 426, y: 448, w: 44, h: 44 },
-        { x: 470, y: 448, w: 44, h: 44 },
-        { x: 514, y: 448, w: 44, h: 44 },
-        { x: 448, y: 404, w: 44, h: 44 },
-        { x: 492, y: 404, w: 44, h: 44 },
-        { x: 470, y: 360, w: 44, h: 44 },
-        { x: 814, y: 448, w: 44, h: 44 },
-        { x: 858, y: 448, w: 44, h: 44 },
-        { x: 902, y: 448, w: 44, h: 44 },
-        { x: 946, y: 448, w: 44, h: 44 },
-        { x: 836, y: 404, w: 44, h: 44 },
-        { x: 880, y: 404, w: 44, h: 44 },
-        { x: 924, y: 404, w: 44, h: 44 },
-        { x: 858, y: 360, w: 44, h: 44 },
-        { x: 902, y: 360, w: 44, h: 44 },
-        { x: 880, y: 316, w: 44, h: 44 }
+        { x: 456, y: 258, w: 44, h: 44 },
+        { x: 500, y: 258, w: 44, h: 44 },
+        { x: 544, y: 258, w: 44, h: 44 },
+        { x: 478, y: 214, w: 44, h: 44 },
+        { x: 522, y: 214, w: 44, h: 44 },
+        { x: 500, y: 170, w: 44, h: 44 },
+        { x: 814, y: 328, w: 44, h: 44 },
+        { x: 858, y: 328, w: 44, h: 44 },
+        { x: 902, y: 328, w: 44, h: 44 },
+        { x: 946, y: 328, w: 44, h: 44 },
+        { x: 836, y: 284, w: 44, h: 44 },
+        { x: 880, y: 284, w: 44, h: 44 },
+        { x: 924, y: 284, w: 44, h: 44 },
+        { x: 858, y: 240, w: 44, h: 44 },
+        { x: 902, y: 240, w: 44, h: 44 },
+        { x: 880, y: 196, w: 44, h: 44 }
       ]
     }
   ];
@@ -245,7 +242,7 @@
       const impact = Math.min(1, vn / 16);
       shake = Math.max(shake, impact * 7);
       const mid = { x: (A.position.x + B.position.x) / 2, y: (A.position.y + B.position.y) / 2 };
-      spawnParticles(mid.x, mid.y, '#d9a05b', Math.round(4 + impact * 8));
+      spawnParticles(mid.x, mid.y, '#c29a6b', Math.round(4 + impact * 8));
       if (A._block || B._block) sHit();
     }
   });
@@ -281,7 +278,7 @@
       const moved = Math.abs(p.x - b.x0) > 45;    // 被撞离原位
       if (fell || tilted || moved) {
         addScore(100, p.x, p.y);
-        spawnParticles(p.x, p.y, '#8a5a2b', 14);
+        spawnParticles(p.x, p.y, '#9a7048', 14);
         sClear();
         blocks.splice(i, 1);
         i--;
@@ -412,65 +409,67 @@
     ctx.closePath();
   }
   function chip(x, y, w, h, label) {
-    ctx.fillStyle = 'rgba(15,23,42,0.45)';
-    roundRect(x, y, w, h, 10); ctx.fill();
-    ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1.5; ctx.stroke();
-    ctx.fillStyle = '#fff';
+    ctx.fillStyle = 'rgba(47,42,34,0.5)';
+    roundRect(x, y, w, h,10); ctx.fill();
+    ctx.strokeStyle = 'rgba(253,248,239,0.35)'; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.fillStyle = '#fdf8ef';
     ctx.font = 'bold 17px "Segoe UI","Microsoft YaHei",sans-serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(label, x + w / 2, y + h / 2 + 1);
   }
 
   function drawBackground() {
+    // 宣纸底（米白留白）
     const sky = ctx.createLinearGradient(0, 0, 0, WORLD_H);
-    sky.addColorStop(0, '#6ec3f5');
-    sky.addColorStop(0.5, '#a9dff7');
-    sky.addColorStop(1, '#e6f5fc');
+    sky.addColorStop(0, '#faf5e8');
+    sky.addColorStop(0.55, '#f4ecd9');
+    sky.addColorStop(1, '#ece3cb');
     ctx.fillStyle = sky;
     ctx.fillRect(0, 0, WORLD_W, WORLD_H);
 
-    // 太阳（带旋转光芒）
+    // 朱砂太阳（印章式 + 淡晕）
     const sx = 110, sy = 95;
-    ctx.save();
-    ctx.translate(sx, sy);
-    ctx.rotate(time * 0.0002);
-    ctx.strokeStyle = 'rgba(255,208,90,0.5)';
-    ctx.lineWidth = 5; ctx.lineCap = 'round';
-    for (let i = 0; i < 12; i++) {
-      const a = i / 12 * Math.PI * 2;
-      ctx.beginPath();
-      ctx.moveTo(Math.cos(a) * 46, Math.sin(a) * 46);
-      ctx.lineTo(Math.cos(a) * 58, Math.sin(a) * 58);
-      ctx.stroke();
-    }
-    ctx.restore();
-    ctx.fillStyle = '#ffe08a';
-    ctx.beginPath(); ctx.arc(sx, sy, 40, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = '#ffd25e';
-    ctx.beginPath(); ctx.arc(sx, sy, 32, 0, Math.PI * 2); ctx.fill();
+    const glow = ctx.createRadialGradient(sx, sy, 8, sx, sy, 62);
+    glow.addColorStop(0, 'rgba(192,57,43,0.28)');
+    glow.addColorStop(1, 'rgba(192,57,43,0)');
+    ctx.fillStyle = glow;
+    ctx.beginPath(); ctx.arc(sx, sy, 62, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = 'rgba(192,57,43,0.92)';
+    ctx.beginPath(); ctx.arc(sx, sy, 30, 0, Math.PI * 2); ctx.fill();
 
-    // 飘动的云
+    // 淡墨晕染云
     drawCloud(((time * 0.02 + 420) % (WORLD_W + 240)) - 120, 90, 1);
     drawCloud(((time * 0.014 + 660) % (WORLD_W + 240)) - 120, 150, 0.8);
     drawCloud(((time * 0.026 + 900) % (WORLD_W + 240)) - 120, 70, 1.2);
 
-    // 远山
-    ctx.fillStyle = '#a7d48b';
+    // 浓淡墨远山（三层，由淡到浓）
+    drawMountain('#b8b1a2', 0.55, 500, 62);
+    drawMountain('#8a8374', 0.75, 516, 50);
+    drawMountain('#5c574b', 0.9, 528, 38);
+  }
+  function drawMountain(color, alpha, baseY, amp) {
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = color;
     ctx.beginPath();
-    ctx.moveTo(0, 520);
-    ctx.quadraticCurveTo(160, 440, 320, 520);
-    ctx.quadraticCurveTo(480, 430, 640, 520);
-    ctx.quadraticCurveTo(800, 455, 960, 520);
-    ctx.lineTo(960, 560); ctx.lineTo(0, 560);
+    ctx.moveTo(0, baseY);
+    ctx.quadraticCurveTo(180, baseY - amp, 360, baseY);
+    ctx.quadraticCurveTo(540, baseY - amp * 0.9, 720, baseY);
+    ctx.quadraticCurveTo(860, baseY - amp * 0.8, 960, baseY);
+    ctx.lineTo(960, WORLD_H); ctx.lineTo(0, WORLD_H);
     ctx.closePath(); ctx.fill();
+    ctx.restore();
   }
   function drawCloud(x, y, s) {
     ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
-    ctx.fillStyle = 'rgba(255,255,255,0.92)';
+    const g = ctx.createRadialGradient(0, 0, 2, 0, 0, 42);
+    g.addColorStop(0, 'rgba(110,100,85,0.16)');
+    g.addColorStop(1, 'rgba(110,100,85,0)');
+    ctx.fillStyle = g;
     ctx.beginPath();
-    ctx.arc(0, 0, 20, 0, Math.PI * 2);
-    ctx.arc(24, 6, 16, 0, Math.PI * 2);
-    ctx.arc(-22, 6, 15, 0, Math.PI * 2);
+    ctx.arc(0, 0, 42, 0, Math.PI * 2);
+    ctx.arc(28, 8, 32, 0, Math.PI * 2);
+    ctx.arc(-26, 8, 30, 0, Math.PI * 2);
     ctx.fill();
     ctx.restore();
   }
@@ -479,18 +478,36 @@
     const body = isl.body, w = isl.w, h = isl.h;
     const x = body.position.x, y = body.position.y;
     const top = y - h / 2;
-    // 泥土
-    ctx.fillStyle = '#b0783f';
-    roundRect(x - w / 2, top, w, h, 14); ctx.fill();
-    ctx.strokeStyle = '#7a4d24'; ctx.lineWidth = 2;
-    roundRect(x - w / 2, top, w, h, 14); ctx.stroke();
-    // 草地
+    // 青绿山石（上平下收，悬空）
+    const rock = ctx.createLinearGradient(0, top, 0, top + h);
+    rock.addColorStop(0, '#7a9c80');
+    rock.addColorStop(0.55, '#5f8470');
+    rock.addColorStop(1, '#3f5f52');
+    ctx.fillStyle = rock;
+    ctx.beginPath();
+    ctx.moveTo(x - w / 2, top);
+    ctx.lineTo(x + w / 2, top);
+    ctx.lineTo(x + w * 0.44, top + h);
+    ctx.lineTo(x - w * 0.44, top + h);
+    ctx.closePath(); ctx.fill();
+    // 山石顶部受光
+    const hi = ctx.createLinearGradient(0, top, 0, top + h * 0.4);
+    hi.addColorStop(0, 'rgba(240,220,170,0.22)');
+    hi.addColorStop(1, 'rgba(240,220,170,0)');
+    ctx.fillStyle = hi;
+    ctx.beginPath();
+    ctx.moveTo(x - w / 2, top);
+    ctx.lineTo(x + w / 2, top);
+    ctx.lineTo(x + w * 0.4, top + h * 0.4);
+    ctx.lineTo(x - w * 0.4, top + h * 0.4);
+    ctx.closePath(); ctx.fill();
+    // 苔草
     const g = ctx.createLinearGradient(0, top, 0, top + 18);
-    g.addColorStop(0, '#8fce5b'); g.addColorStop(1, '#5aa839');
+    g.addColorStop(0, '#93ad76'); g.addColorStop(1, '#6d8a58');
     ctx.fillStyle = g;
-    roundRect(x - w / 2, top, w, 18, 14); ctx.fill();
+    roundRect(x - w / 2, top, w, 18, 9); ctx.fill();
     // 草叶
-    ctx.strokeStyle = 'rgba(70,140,50,0.5)'; ctx.lineWidth = 2;
+    ctx.strokeStyle = 'rgba(80,110,70,0.55)'; ctx.lineWidth = 2;
     for (let i = 0; i < Math.floor(w / 22); i++) {
       const gx = x - w / 2 + 14 + i * 22;
       ctx.beginPath();
@@ -498,6 +515,14 @@
       ctx.moveTo(gx + 6, top); ctx.lineTo(gx + 9, top - 6);
       ctx.stroke();
     }
+    // 苔点
+    ctx.fillStyle = 'rgba(95,132,112,0.9)';
+    ctx.beginPath(); ctx.arc(x - w * 0.26, top + h * 0.42, 6, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(x + w * 0.3, top + h * 0.56, 4.5, 0, Math.PI * 2); ctx.fill();
+    // 垂藤
+    ctx.strokeStyle = 'rgba(74,95,82,0.7)'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x - w * 0.3, top + h); ctx.lineTo(x - w * 0.3 + 3, top + h + 16); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x + w * 0.28, top + h); ctx.lineTo(x + w * 0.28 - 3, top + h + 20); ctx.stroke();
   }
 
   function drawBlock(b) {
@@ -506,13 +531,13 @@
     ctx.translate(body.position.x, body.position.y);
     ctx.rotate(body.angle);
     const grad = ctx.createLinearGradient(0, -h / 2, 0, h / 2);
-    grad.addColorStop(0, '#c9925b'); grad.addColorStop(1, '#9a6637');
+    grad.addColorStop(0, '#c29a6b'); grad.addColorStop(1, '#9a7048');
     ctx.fillStyle = grad;
     ctx.fillRect(-w / 2, -h / 2, w, h);
-    ctx.strokeStyle = '#7a4d24'; ctx.lineWidth = 2;
+    ctx.strokeStyle = '#6f5438'; ctx.lineWidth = 2;
     ctx.strokeRect(-w / 2, -h / 2, w, h);
     // 木纹
-    ctx.strokeStyle = 'rgba(122,77,36,0.35)'; ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(90,66,40,0.35)'; ctx.lineWidth = 1;
     const lines = Math.max(1, Math.floor(h / 16));
     for (let i = 1; i < lines; i++) {
       ctx.beginPath();
@@ -523,21 +548,124 @@
     ctx.restore();
   }
 
-  function drawSlingshot() {
-    ctx.lineCap = 'round';
-    ctx.strokeStyle = '#6b4423'; ctx.lineWidth = 10;
-    ctx.beginPath(); ctx.moveTo(SLING_BASE.x - 4, SLING_BASE.y); ctx.lineTo(PRONG_L.x, PRONG_L.y); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(SLING_BASE.x + 4, SLING_BASE.y); ctx.lineTo(PRONG_R.x, PRONG_R.y); ctx.stroke();
-    ctx.strokeStyle = '#5a3720'; ctx.lineWidth = 13;
-    ctx.beginPath(); ctx.moveTo(SLING_BASE.x, SLING_BASE.y - 4); ctx.lineTo(SLING_BASE.x, SLING_BASE.y + 8); ctx.stroke();
-    ctx.fillStyle = '#4a2e18';
-    ctx.beginPath(); ctx.ellipse(SLING_BASE.x, SLING_BASE.y, 18, 8, 0, 0, Math.PI * 2); ctx.fill();
+  // ---------- 水墨弹弓 ----------
+  const INK = '#1e1b18';
+  const INK_WASH = '#6f6a5f';
+  const BAND_COLOR = '#f2736a';
+
+  // 固定种子的飞溅墨点（避免逐帧随机闪烁）
+  const INK_SPLATTER = (function () {
+    const arr = [];
+    let s = 20261012;
+    function rnd() { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff; }
+    for (let i = 0; i < 15; i++) {
+      arr.push({
+        x: 116 + rnd() * 148,
+        y: 328 + rnd() * 154,
+        r: 0.9 + rnd() * 3.1,
+        a: 0.12 + rnd() * 0.38
+      });
+    }
+    return arr;
+  })();
+
+  // 变宽墨笔：采样二次贝塞尔得到左右边界，整条一次填充成笔锋
+  // （半透明层必须一次填充，否则逐段叠加会渗出珠点）
+  function inkCurve(x0, y0, cx, cy, x1, y1, w0, w1, color) {
+    const N = 18;
+    const Ls = [], Rs = [];
+    for (let i = 0; i <= N; i++) {
+      const t = i / N, mt = 1 - t;
+      const x = mt * mt * x0 + 2 * mt * t * cx + t * t * x1;
+      const y = mt * mt * y0 + 2 * mt * t * cy + t * t * y1;
+      const w = (w0 + (w1 - w0) * t) / 2;
+      const dx = 2 * mt * (cx - x0) + 2 * t * (x1 - cx);
+      const dy = 2 * mt * (cy - y0) + 2 * t * (y1 - cy);
+      const len = Math.hypot(dx, dy) || 1;
+      const nx = -dy / len, ny = dx / len;
+      Ls.push([x + nx * w, y + ny * w]);
+      Rs.push([x - nx * w, y - ny * w]);
+    }
+    const a0 = Math.atan2(cy - y0, cx - x0);   // 起点切线
+    const a1 = Math.atan2(y1 - cy, x1 - cx);   // 终点切线
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(Ls[0][0], Ls[0][1]);
+    for (let i = 1; i <= N; i++) ctx.lineTo(Ls[i][0], Ls[i][1]);
+    ctx.arc(x1, y1, w1 / 2, a1 + Math.PI / 2, a1 - Math.PI / 2, true);
+    for (let i = N; i >= 0; i--) ctx.lineTo(Rs[i][0], Rs[i][1]);
+    ctx.arc(x0, y0, w0 / 2, a0 - Math.PI / 2, a0 + Math.PI / 2, true);
+    ctx.closePath();
+    ctx.fill();
   }
+
+  function drawSlingshot() {
+    const bx = SLING_BASE.x, by = SLING_BASE.y;
+    const splitY = by - 62;                    // Y 形分叉点
+    // 1) 湿墨洇染底层
+    ctx.save();
+    ctx.globalAlpha = 0.26;
+    inkCurve(bx, by - 2, bx - 3, by - 40, PRONG_L.x, PRONG_L.y + 8, 32, 17, INK_WASH);
+    inkCurve(bx, by - 2, bx + 3, by - 40, PRONG_R.x, PRONG_R.y + 8, 32, 17, INK_WASH);
+    ctx.restore();
+    // 2) 浓墨主体（Y 形，上细下粗）
+    inkCurve(bx, by + 12, bx - 2, by - 32, PRONG_L.x, PRONG_L.y, 30, 15, INK);
+    inkCurve(bx, by + 12, bx + 2, by - 32, PRONG_R.x, PRONG_R.y, 30, 15, INK);
+    inkCurve(bx, by + 20, bx, by - 22, bx, splitY - 2, 34, 28, INK);
+    // 3) 笔锋挑白
+    ctx.save();
+    ctx.globalAlpha = 0.16;
+    inkCurve(bx - 3, by - 8, bx - 7, by - 42, PRONG_L.x + 4, PRONG_L.y + 12, 7, 3, '#fdf8ef');
+    inkCurve(bx + 3, by - 8, bx + 7, by - 42, PRONG_R.x - 4, PRONG_R.y + 12, 7, 3, '#fdf8ef');
+    ctx.restore();
+    // 4) 底部积墨
+    ctx.save();
+    ctx.globalAlpha = 0.2;
+    ctx.fillStyle = INK_WASH;
+    ctx.beginPath(); ctx.ellipse(bx, by + 2, 21, 24, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    // 5) 飞溅墨点
+    for (let i = 0; i < INK_SPLATTER.length; i++) {
+      const sp = INK_SPLATTER[i];
+      ctx.save();
+      ctx.globalAlpha = sp.a;
+      ctx.fillStyle = INK;
+      ctx.beginPath(); ctx.arc(sp.x, sp.y, sp.r, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+    }
+  }
+
   function drawBands() {
     const bp = bird ? { x: bird.position.x, y: bird.position.y } : { x: POCKET.x, y: POCKET.y };
-    ctx.strokeStyle = '#3a2410'; ctx.lineWidth = 4; ctx.lineCap = 'round';
+    const bx = SLING_BASE.x;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    // 松弛的皮筋（仅待发射时）：绕在叉尖上，沿 Y 外侧垂下到柄底
+    if (state !== 'dragging') {
+      const lx = PRONG_L.x - 7, ly = PRONG_L.y + 5;
+      const rx = PRONG_R.x + 7, ry = PRONG_R.y + 5;
+      ctx.save();
+      ctx.globalAlpha = 0.55;
+      ctx.strokeStyle = BAND_COLOR; ctx.lineWidth = 5;
+      ctx.beginPath();                       // 顶部横跨的一股
+      ctx.moveTo(lx, ly);
+      ctx.quadraticCurveTo(bx, PRONG_L.y + 16, rx, ry);
+      ctx.stroke();
+      ctx.beginPath();                       // 外侧松垂的大环
+      ctx.moveTo(lx, ly);
+      ctx.quadraticCurveTo(PRONG_L.x - 24, SLING_BASE.y - 74, bx - 19, SLING_BASE.y - 6);
+      ctx.quadraticCurveTo(bx, SLING_BASE.y + 22, bx + 19, SLING_BASE.y - 6);
+      ctx.quadraticCurveTo(PRONG_R.x + 24, SLING_BASE.y - 74, rx, ry);
+      ctx.stroke();
+      ctx.restore();
+    }
+    // 两股皮筋：叉尖 → 弹丸
+    ctx.strokeStyle = BAND_COLOR; ctx.lineWidth = 7;
     ctx.beginPath(); ctx.moveTo(PRONG_L.x, PRONG_L.y); ctx.lineTo(bp.x, bp.y); ctx.stroke();
     ctx.beginPath(); ctx.moveTo(PRONG_R.x, PRONG_R.y); ctx.lineTo(bp.x, bp.y); ctx.stroke();
+    // 兜住弹丸的红结
+    ctx.fillStyle = BAND_COLOR;
+    ctx.beginPath(); ctx.arc(bp.x, bp.y, 6.5, 0, Math.PI * 2); ctx.fill();
   }
   function drawBird(body) {
     ctx.save();
@@ -545,6 +673,8 @@
     ctx.rotate(body.angle);
     if (birdSprite.complete && birdSprite.naturalWidth > 0) {
       const dw = 54, dh = dw * SPR_H / SPR_W;
+      ctx.fillStyle = 'rgba(60,55,45,0.18)';
+      ctx.beginPath(); ctx.ellipse(0, dh / 2 - 3, dw * 0.42, 6, 0, 0, Math.PI * 2); ctx.fill();
       ctx.drawImage(birdSprite, -dw / 2, -dh / 2, dw, dh);
     } else {
       ctx.fillStyle = '#ffd24a';
@@ -552,24 +682,29 @@
     }
     ctx.restore();
   }
+  // 抛射预览。必须复刻 Matter 的积分，否则和真实弹道对不上：
+  //   每步 v = v * (1 - frictionAir) + gravity.y * gravity.scale * dt²   （不是 vel.y += gravity.y）
   function drawTrajectory() {
-    let pos = { x: bird.position.x, y: bird.position.y };
-    let vel = {
-      x: (ANCHOR.x - pos.x) * LAUNCH_K,
-      y: (ANCHOR.y - pos.y) * LAUNCH_K
-    };
-    const g = engine.gravity.y;
-    for (let i = 0; i < 34; i++) {
-      vel.y += g;
-      pos.x += vel.x;
-      pos.y += vel.y;
+    const gravAcc = engine.gravity.y * (typeof engine.gravity.scale === 'number' ? engine.gravity.scale : 0.001);
+    const baseDelta = (Matter.Common && Matter.Common._baseDelta) || STEP;
+    const air = 1 - bird.frictionAir * (STEP / baseDelta);
+    let px = bird.position.x, py = bird.position.y;
+    let vx = (ANCHOR.x - px) * LAUNCH_K;
+    let vy = (ANCHOR.y - py) * LAUNCH_K;
+    const N = 40, ACC = gravAcc * STEP * STEP;
+    ctx.save();
+    for (let i = 0; i < N; i++) {
+      vx *= air;
+      vy = vy * air + ACC;
+      px += vx; py += vy;
+      if (px < -40 || px > WORLD_W + 40 || py > WORLD_H + 40) break;
       if (i % 2 === 0) {
-        ctx.globalAlpha = 1 - i / 34;
-        ctx.fillStyle = '#fff';
-        ctx.beginPath(); ctx.arc(pos.x, pos.y, 4, 0, Math.PI * 2); ctx.fill();
+        ctx.globalAlpha = 0.8 * (1 - i / N);
+        ctx.fillStyle = '#3c372d';
+        ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2); ctx.fill();
       }
     }
-    ctx.globalAlpha = 1;
+    ctx.restore();
   }
   function drawParticles() {
     for (let i = 0; i < particles.length; i++) {
@@ -588,10 +723,10 @@
       const p = popups[i];
       ctx.save();
       ctx.globalAlpha = Math.max(0, p.life);
-      ctx.fillStyle = '#fff';
+      ctx.fillStyle = '#c0392b';
       ctx.font = 'bold 22px "Segoe UI","Microsoft YaHei",sans-serif';
       ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(15,23,42,0.6)';
+      ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(253,248,239,0.9)';
       ctx.strokeText(p.txt, p.x, p.y);
       ctx.fillText(p.txt, p.x, p.y);
       ctx.restore();
@@ -599,7 +734,7 @@
     ctx.globalAlpha = 1;
   }
   function drawHUD() {
-    chip(12, 12, 200, 34, '🐉 奶龙弹射 · ' + LEVELS[levelIndex].name);
+    chip(12, 12, 200, 34, 'DDD · ' + LEVELS[levelIndex].name);
     chip(WORLD_W - 150, 12, 140, 34, '剩余 × ' + shotsLeft);
     chip(12, 50, 130, 34, '得分 ' + score);
     chip(RESTART_RECT.x, RESTART_RECT.y, RESTART_RECT.w, RESTART_RECT.h, '↻ 重来');
