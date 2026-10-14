@@ -24,6 +24,9 @@
   const MAX_DRAG = 130;
   const LAUNCH_K = 0.25;
   const BIRD_R = 26;
+  // 奶龙「开始下坠」之后额外追加的重力比例：上升段完全不变，只有 vy > 0 的那一段掉得更快。
+  // 木块不吃这个加成（改的是 bird 自身的受力，不是 engine.gravity）。
+  const FALL_GRAVITY_BOOST = 0.3;
 
   const RESTART_RECT = { x: WORLD_W - 150, y: 50, w: 140, h: 34 };
 
@@ -683,7 +686,8 @@
     ctx.restore();
   }
   // 抛射预览。必须复刻 Matter 的积分，否则和真实弹道对不上：
-  //   每步 v = v * (1 - frictionAir) + gravity.y * gravity.scale * dt²   （不是 vel.y += gravity.y）
+  //   每步 v = v * (1 - frictionAir) + 重力加速度 * dt²   （不是 vel.y += gravity.y）
+  //   下坠段（进入这一步时 vy > 0）和 applyFallBoost() 一样多加 FALL_GRAVITY_BOOST 倍重力。
   function drawTrajectory() {
     const gravAcc = engine.gravity.y * (typeof engine.gravity.scale === 'number' ? engine.gravity.scale : 0.001);
     const baseDelta = (Matter.Common && Matter.Common._baseDelta) || STEP;
@@ -692,10 +696,12 @@
     let vx = (ANCHOR.x - px) * LAUNCH_K;
     let vy = (ANCHOR.y - py) * LAUNCH_K;
     const N = 40, ACC = gravAcc * STEP * STEP;
+    const ACC_FALL = ACC * (1 + FALL_GRAVITY_BOOST);
     ctx.save();
     for (let i = 0; i < N; i++) {
+      const falling = vy > 0; // 与 applyFallBoost 同口径：看进入这一步时的垂直速度
       vx *= air;
-      vy = vy * air + ACC;
+      vy = vy * air + (falling ? ACC_FALL : ACC);
       px += vx; py += vy;
       if (px < -40 || px > WORLD_W + 40 || py > WORLD_H + 40) break;
       if (i % 2 === 0) {
@@ -894,6 +900,17 @@
   })();
 
   // ---------- 主循环 ----------
+  // 奶龙下坠加速：Matter 在 Engine.update() 内部先给每个 body 加上
+  // mass * gravity.y * gravity.scale 的重力，再积分、最后清空 force。
+  // 所以我们在 Engine.update() 之前，把同样口径的 30% 额外加到 bird.force.y 上，
+  // 它就会被同一帧一起积分进去；且只对 state==='flying' 且 vy>0 的奶龙生效。
+  function applyFallBoost() {
+    if (state !== 'flying' || !bird) return;
+    if (bird.velocity.y <= 0) return;
+    const gScale = (typeof engine.gravity.scale === 'number') ? engine.gravity.scale : 0.001;
+    bird.force.y += bird.mass * engine.gravity.y * gScale * FALL_GRAVITY_BOOST;
+  }
+
   let last = performance.now();
   let acc = 0;
   const STEP = 1000 / 60;
@@ -903,6 +920,7 @@
     acc += dt;
     if (acc > 250) acc = 250;
     while (acc >= STEP) {
+      applyFallBoost();
       Engine.update(engine, STEP);
       acc -= STEP;
     }
