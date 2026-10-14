@@ -31,6 +31,13 @@ body {
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.55);
 }
 
+/* 全屏时贴边：去掉圆角与阴影，不留四角的细边 */
+body:fullscreen #game,
+body:-webkit-full-screen #game {
+  border-radius: 0;
+  box-shadow: none;
+}
+
 /* ---------- 覆盖层 ---------- */
 @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes panelIn {
@@ -169,3 +176,85 @@ body {
 #playHint.hidden { display: none; }
 
 .popup-actions { padding: 10px; text-align: center; background: #0b1020; }
+
+/* ================= 手机 / 触屏适配 ================= */
+/* 禁掉页面滚动、下拉刷新、双击缩放；长按不弹系统菜单 */
+html, body {
+  overscroll-behavior: none;
+  touch-action: none;
+}
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+.hidden { display: none !important; }
+
+/* 触屏按钮条与竖屏提示：默认都不显示，由下面的媒体查询放出来 */
+#touchBar { display: none; }
+#rotateOverlay { display: none; }
+
+@media (hover: none) and (pointer: coarse) {
+  /* 手机/平板上用页面按钮条替代画布右上角那三个小芯片（每个 46×46，够手指点） */
+  #touchBar {
+    display: flex;
+    gap: 10px;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 15;
+  }
+  .tbtn {
+    width: 46px;
+    height: 46px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid rgba(253, 248, 239, 0.35);
+    border-radius: 12px;
+    background: rgba(47, 42, 34, 0.5);
+    color: #fdf8ef;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    touch-action: manipulation;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+  .tbtn:active { background: rgba(47, 42, 34, 0.72); transform: scale(0.94); }
+
+  /* 手机横屏普遍只有 350~420 CSS px 高，弹窗整体收紧一点 */
+  .panel { padding: 22px 26px; max-width: 90vw; }
+  .panel .title { font-size: 28px; margin-bottom: 10px; }
+  .panel .sub { font-size: 14px; margin: 5px 0; }
+  .panel .hint { font-size: 12px; margin: 10px 0 14px; }
+  .stars { font-size: 38px; margin: 8px 0 12px; }
+  .btn { font-size: 17px; padding: 12px 28px; }
+  .btn.small { font-size: 14px; padding: 9px 18px; }
+  .btn, .popup-close, .tbtn { touch-action: manipulation; }
+}
+
+/* 竖屏（触屏）：盖一层提示，请玩家把手机横过来 —— 16:9 的游戏横屏才有操作空间 */
+@media (orientation: portrait) and (hover: none) and (pointer: coarse) {
+  #rotateOverlay {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 24px;
+    text-align: center;
+    background: radial-gradient(1200px 700px at 50% 30%, #1e3a5f, #0f172a);
+    color: #fdf8ef;
+  }
+  .rot-icon { font-size: 64px; animation: rotHint 1.8s ease-in-out infinite; }
+  .rot-text { font-size: 22px; font-weight: 700; letter-spacing: 1px; }
+  .rot-sub { font-size: 14px; color: #94a3b8; line-height: 1.6; max-width: 20em; }
+}
+@keyframes rotHint {
+  0%, 35% { transform: rotate(0deg); }
+  65%, 100% { transform: rotate(90deg); }
+}

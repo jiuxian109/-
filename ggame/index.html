@@ -12,6 +12,13 @@
   <canvas id="game" width="960" height="540"></canvas>
 </div>
 
+<!-- 触屏按钮条（桌面端由 CSS 隐藏；手机上替代画布右上角的三个小芯片） -->
+<div id="touchBar">
+  <button id="tbMute" class="tbtn" title="音效开关">🔊</button>
+  <button id="tbFull" class="tbtn" title="全屏">⛶</button>
+  <button id="tbRestart" class="tbtn" title="重来">↻</button>
+</div>
+
 <!-- 开始界面 -->
 <div id="startOverlay" class="overlay">
   <div class="panel">
@@ -21,6 +28,7 @@
     <div class="sub">把堆叠的木块全部击倒，即可通关！</div>
     <div class="hint">共 4 关 · 关卡递进 · 评分星级</div>
     <button id="startBtn" class="btn">▶ 开始游戏</button>
+    <button id="fsBtn" class="btn small ghost">⛶ 全屏</button>
   </div>
 </div>
 
@@ -59,6 +67,13 @@
       <button id="replayBtn" class="btn small">🔄 从头开始</button>
     </div>
   </div>
+</div>
+
+<!-- 竖屏提示（只在「触屏 + 竖屏」时盖在最上层） -->
+<div id="rotateOverlay">
+  <div class="rot-icon">📱</div>
+  <div class="rot-text">请把手机横过来</div>
+  <div class="rot-sub">这个游戏是 16:9 横向的，横屏才有足够的操作空间</div>
 </div>
 
 <script src="lib/matter.min.js"></script>

@@ -38,6 +38,26 @@
 
   const RESTART_RECT = { x: WORLD_W - 150, y: 50, w: 140, h: 34 };
   const MUTE_RECT = { x: WORLD_W - 198, y: 12, w: 40, h: 34 };
+  const FULLSCREEN_RECT = { x: WORLD_W - 246, y: 12, w: 40, h: 34 };
+
+  // ---------- 触屏适配 ----------
+  // 触屏（手机/平板）走另一套 UI：画布右上角的三个小芯片换成页面上的大按钮条，
+  // 芯片整体放大；奶龙抓取半径与弹弓热区按「至少 52 CSS px」放大，免得手指点不中。
+  const touchUI = (function () {
+    try {
+      if (window.matchMedia('(hover: none) and (pointer: coarse)').matches) return true;
+    } catch (err) { /* 老浏览器不支持带参数的 matchMedia */ }
+    return ('ontouchstart' in window) && (navigator.maxTouchPoints > 0);
+  })();
+  // iOS Safari 的 requestFullscreen 只对 <video> 有效，没有就干脆别显示全屏按钮
+  const canFullscreen = !!(document.body.requestFullscreen || document.body.webkitRequestFullscreen);
+  // 把「想要的 CSS 像素」换算成世界单位（960 宽的世界被缩放到 r.width 个 CSS 像素）
+  function cssPx(n) {
+    const r = canvas.getBoundingClientRect();
+    return (r.width > 0) ? n * (WORLD_W / r.width) : n;
+  }
+  // 至少 base、触屏上至少 px 个 CSS 像素
+  function touchHit(px, base) { return touchUI ? Math.max(base, cssPx(px)) : base; }
 
   // ---------- 状态 ----------
   let bird = null;
@@ -346,9 +366,10 @@
   // 热区：抓「奶龙上方的叉尖」或「奶龙下方的手柄」都是要挪弹弓，
   // 中间那块留给奶龙自己 —— 拖它才是发射，两边不会抢。
   function slingHit(p) {
-    if (Math.abs(p.x - slingX) > PRONG_DX + 28) return false;
-    const aboveProng = p.y >= PRONG_L.y - 24 && p.y <= POCKET.y - BIRD_R + 2;
-    const belowBird = p.y >= POCKET.y + BIRD_R - 2 && p.y <= SLING_BASE.y + 16;
+    if (Math.abs(p.x - slingX) > touchHit(34, PRONG_DX + 28)) return false;
+    const pad = touchUI ? 12 : 0;   // 触屏上下各放宽一点，手指没那么准
+    const aboveProng = p.y >= PRONG_L.y - 24 - pad && p.y <= POCKET.y - BIRD_R + 2;
+    const belowBird = p.y >= POCKET.y + BIRD_R - 2 && p.y <= SLING_BASE.y + 16 + pad;
     return aboveProng || belowBird;
   }
 
@@ -541,17 +562,42 @@
     return p.x >= r.x && p.x <= r.x + r.w && p.y >= r.y && p.y <= r.y + r.h;
   }
 
+  // ---------- 全屏 ----------
+  // 让整个页面（document.body）全屏，而不是只让 #stage 全屏 ——
+  // 开始/通关/失败/视频四个覆盖层是 #stage 的兄弟节点，只全屏 #stage 的话它们会看不见。
+  function isFullscreen() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement);
+  }
+  function toggleFullscreen() {
+    if (isFullscreen()) {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen;
+      if (exit) {
+        const r = exit.call(document);
+        if (r && r.catch) r.catch(function () {});
+      }
+    } else {
+      const el = document.body;
+      const req = el.requestFullscreen || el.webkitRequestFullscreen;
+      if (req) {
+        const r = req.call(el);
+        if (r && r.catch) r.catch(function () {});
+      }
+    }
+  }
+
   let activePointer = null;
   let slingGrabDX = 0;
   canvas.addEventListener('pointerdown', function (e) {
     const p = toCanvas(e);
-    if (insideRect(p, RESTART_RECT)) { restart(); sClick(); return; }
-    if (insideRect(p, MUTE_RECT)) {
+    // 触屏上这三个芯片不画（改由页面上的按钮条代劳），热区一并关掉
+    if (!touchUI && insideRect(p, RESTART_RECT)) { restart(); sClick(); return; }
+    if (!touchUI && insideRect(p, MUTE_RECT)) {
       muted = !muted;
       if (muted) pullStop();
       else { ensureAudio(); sClick(); }
       return;
     }
+    if (!touchUI && insideRect(p, FULLSCREEN_RECT)) { ensureAudio(); toggleFullscreen(); sClick(); return; }
     if (state !== 'ready' || !bird) return;
     if (slingHit(p)) {
       state = 'movingSling';
@@ -562,7 +608,7 @@
       return;
     }
     const dx = p.x - bird.position.x, dy = p.y - bird.position.y;
-    if (Math.hypot(dx, dy) <= 70) {
+    if (Math.hypot(dx, dy) <= touchHit(52, 70)) {
       state = 'dragging';
       activePointer = e.pointerId;
       dragTarget = { x: bird.position.x, y: bird.position.y };
@@ -636,11 +682,18 @@
     ctx.closePath();
   }
   function chip(x, y, w, h, label) {
+    if (touchUI) {                        // 触屏：芯片与字号一起放大，手机上才看得清
+      const k = 1.25;
+      x -= w * (k - 1) / 2; y -= h * (k - 1) / 2;
+      w *= k; h *= k;
+      if (x < 4) x = 4;
+      if (y < 4) y = 4;
+    }
     ctx.fillStyle = 'rgba(47,42,34,0.5)';
     roundRect(x, y, w, h,10); ctx.fill();
     ctx.strokeStyle = 'rgba(253,248,239,0.35)'; ctx.lineWidth = 1.5; ctx.stroke();
     ctx.fillStyle = '#fdf8ef';
-    ctx.font = 'bold 17px "Segoe UI","Microsoft YaHei",sans-serif';
+    ctx.font = 'bold ' + (touchUI ? 21 : 17) + 'px "Segoe UI","Microsoft YaHei",sans-serif';
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(label, x + w / 2, y + h / 2 + 1);
   }
@@ -1048,10 +1101,17 @@
   }
   function drawHUD() {
     chip(12, 12, 200, 34, 'DDD · ' + LEVELS[levelIndex].name);
-    chip(WORLD_W - 150, 12, 140, 34, '剩余 × ' + shotsLeft);
     chip(12, 50, 130, 34, '得分 ' + score);
-    chip(RESTART_RECT.x, RESTART_RECT.y, RESTART_RECT.w, RESTART_RECT.h, '↻ 重来');
-    chip(MUTE_RECT.x, MUTE_RECT.y, MUTE_RECT.w, MUTE_RECT.h, muted ? '🔇' : '🔊');
+    if (touchUI) {
+      // 触屏：右上角让给页面上的按钮条，剩余发数挪到左边一列，信息一样不缺
+      chip(12, 88, 130, 34, '剩余 × ' + shotsLeft);
+    } else {
+      chip(WORLD_W - 150, 12, 140, 34, '剩余 × ' + shotsLeft);
+      chip(RESTART_RECT.x, RESTART_RECT.y, RESTART_RECT.w, RESTART_RECT.h, '↻ 重来');
+      chip(MUTE_RECT.x, MUTE_RECT.y, MUTE_RECT.w, MUTE_RECT.h, muted ? '🔇' : '🔊');
+      chip(FULLSCREEN_RECT.x, FULLSCREEN_RECT.y, FULLSCREEN_RECT.w, FULLSCREEN_RECT.h,
+           isFullscreen() ? '⤡' : '⛶');
+    }
   }
 
   function render() {
@@ -1180,6 +1240,17 @@
     sClick();
     startOverlay.classList.add('hidden');
   });
+  // 开始界面里的全屏按钮（画布上的 ⛶ 芯片在弹窗盖住时点不到）
+  (function () {
+    const fsBtn = document.getElementById('fsBtn');
+    if (!fsBtn) return;
+    if (!canFullscreen) { fsBtn.classList.add('hidden'); return; }   // iOS 上不支持，别留个点了没反应的按钮
+    fsBtn.addEventListener('click', function () { ensureAudio(); toggleFullscreen(); sClick(); });
+    const syncFsBtn = function () { fsBtn.textContent = isFullscreen() ? '⤡ 退出全屏' : '⛶ 全屏'; };
+    document.addEventListener('fullscreenchange', syncFsBtn);
+    document.addEventListener('webkitfullscreenchange', syncFsBtn);
+    syncFsBtn();
+  })();
   document.getElementById('retryBtn').addEventListener('click', function () { sClick(); restart(); });
   document.getElementById('replayBtn').addEventListener('click', function () { sClick(); restartGame(); });
   document.getElementById('popupClose').addEventListener('click', function () { sClick(); hideVideo(); });
@@ -1193,6 +1264,34 @@
     state = 'ready';
   });
   replayLevelBtn.addEventListener('click', function () { sClick(); restart(); });
+
+  // ---------- 触屏按钮条（手机上替代画布右上角的三个芯片）----------
+  (function () {
+    const bar = document.getElementById('touchBar');
+    if (!bar) return;
+    const bMute = document.getElementById('tbMute');
+    const bFull = document.getElementById('tbFull');
+    const bRestart = document.getElementById('tbRestart');
+    if (bFull && !canFullscreen) bFull.classList.add('hidden');
+    const syncBar = function () {
+      if (bMute) bMute.textContent = muted ? '🔇' : '🔊';
+      if (bFull) bFull.textContent = isFullscreen() ? '⤡' : '⛶';
+    };
+    if (bMute) bMute.addEventListener('click', function () {
+      muted = !muted;
+      if (muted) pullStop(); else { ensureAudio(); sClick(); }
+      syncBar();
+    });
+    if (bFull) bFull.addEventListener('click', function () {
+      ensureAudio(); toggleFullscreen(); sClick(); syncBar();
+    });
+    if (bRestart) bRestart.addEventListener('click', function () { sClick(); restart(); });
+    document.addEventListener('fullscreenchange', syncBar);
+    document.addEventListener('webkitfullscreenchange', syncBar);
+    syncBar();
+    // 手机上禁掉长按弹出的系统菜单（选择/分享），免得拉弓拉到一半被打断
+    if (touchUI) document.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+  })();
 
   // 小窗拖拽
   (function () {
