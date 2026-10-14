@@ -32,6 +32,26 @@ body {
 }
 
 /* ---------- 覆盖层 ---------- */
+@keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes panelIn {
+  0%   { opacity: 0; transform: scale(0.86) translateY(12px); }
+  62%  { opacity: 1; transform: scale(1.03) translateY(0); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+@keyframes panelShake {
+  0%, 100% { transform: translateX(0) rotate(0deg); }
+  15% { transform: translateX(-9px) rotate(-1.2deg); }
+  32% { transform: translateX(8px) rotate(1deg); }
+  48% { transform: translateX(-6px) rotate(-0.7deg); }
+  66% { transform: translateX(5px) rotate(0.5deg); }
+  84% { transform: translateX(-2px) rotate(-0.2deg); }
+}
+@keyframes starPop {
+  0%   { opacity: 0; transform: scale(0.2) rotate(-45deg); }
+  60%  { opacity: 1; transform: scale(1.55) rotate(10deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
 .overlay {
   position: fixed;
   inset: 0;
@@ -40,6 +60,7 @@ body {
   justify-content: center;
   background: rgba(15, 23, 42, 0.55);
   z-index: 20;
+  animation: overlayIn 0.22s ease-out both;
 }
 .overlay.hidden { display: none; }
 
@@ -50,12 +71,20 @@ body {
   text-align: center;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
   max-width: 92vw;
+  animation: panelIn 0.30s cubic-bezier(0.2, 1.5, 0.45, 1) both;
+}
+/* 失败弹窗：弹入之后再懊恼地晃两下 */
+.overlay.shake .panel {
+  animation: panelIn 0.30s cubic-bezier(0.2, 1.5, 0.45, 1) both,
+             panelShake 0.55s 0.30s ease-in-out both;
 }
 .panel .title { font-size: 34px; font-weight: 800; color: #1f2937; margin-bottom: 14px; }
 .panel .sub { font-size: 16px; color: #4b5563; margin: 6px 0; }
 .panel .hint { font-size: 14px; color: #9ca3af; margin: 12px 0 22px; }
 
 .stars { font-size: 44px; line-height: 1; margin: 10px 0 16px; letter-spacing: 6px; }
+.stars span { display: inline-block; }
+.stars .pop { animation: starPop 0.34s cubic-bezier(0.2, 1.6, 0.5, 1) both; }
 .stars .on { color: #f59e0b; text-shadow: 0 2px 6px rgba(245, 158, 11, 0.5); }
 .stars .off { color: #e5e7eb; }
 

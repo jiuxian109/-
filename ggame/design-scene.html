@@ -85,6 +85,8 @@
     content: ""; position: absolute; left: 6%; right: 6%; top: 10%; height: 26%;
     background: radial-gradient(120% 90% at 50% 30%, rgba(240,220,170,0.35), rgba(240,220,170,0));
   }
+  /* 浮空岛：上下等宽的长方形 + 四个角小圆角（弹弓岛仍保留山石梯形） */
+  .island.float .rock { clip-path: none; border-radius: 10px; }
   .island .grass {
     position: absolute; left: -8px; top: -5px; width: calc(100% + 16px); height: 20px;
     background: linear-gradient(180deg, #93ad76, #6d8a58);
@@ -195,7 +197,7 @@
       </div>
 
       <!-- 浮空岛 2（金字塔岛） -->
-      <div class="island" style="left:490px; top:452px; width:300px; height:88px;">
+      <div class="island float" style="left:490px; top:452px; width:300px; height:88px;">
         <div class="rock"></div>
         <div class="grass"></div>
         <div class="moss" style="left:42px; top:48px;"></div>
@@ -205,7 +207,7 @@
       </div>
 
       <!-- 浮空岛 3（小塔岛） -->
-      <div class="island" style="left:770px; top:452px; width:180px; height:88px;">
+      <div class="island float" style="left:770px; top:452px; width:180px; height:88px;">
         <div class="rock"></div>
         <div class="grass"></div>
         <div class="moss" style="left:28px; top:52px;"></div>

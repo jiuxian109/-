@@ -56,6 +56,8 @@
     content: ""; position: absolute; left: 0; right: 0; top: 0; height: 22%;
     background: linear-gradient(180deg, #93ad76, #6d8a58);
   }
+  /* 浮空岛：上下等宽的长方形 + 四个角小圆角（发射台仍保留山石梯形） */
+  .isl.lift { clip-path: none; border-radius: 9px; overflow: hidden; }
   .blk {
     position: absolute; width: 22px; height: 22px;
     background: linear-gradient(180deg, #c29a6b, #9a7048);
@@ -130,7 +132,7 @@
         <div class="sun" style="left:28px;top:22px;"></div>
         <div class="h-line" style="top:117px;"><span>中线 y=270</span></div>
         <div class="isl" style="left:-5px;top:235px;width:160px;height:60px;"></div>
-        <div class="isl" style="left:245px;top:195px;width:150px;height:50px;"></div>
+        <div class="isl lift" style="left:245px;top:195px;width:150px;height:50px;"></div>
         <i class="blk" style="left:287px;top:173px;"></i>
         <i class="blk" style="left:309px;top:173px;"></i>
         <i class="blk" style="left:331px;top:173px;"></i>
@@ -152,8 +154,8 @@
         <div class="sun" style="left:28px;top:22px;"></div>
         <div class="h-line" style="top:117px;"><span>中线 y=270</span></div>
         <div class="isl" style="left:-5px;top:235px;width:160px;height:60px;"></div>
-        <div class="isl" style="left:215px;top:220px;width:130px;height:50px;"></div>
-        <div class="isl" style="left:395px;top:150px;width:90px;height:50px;"></div>
+        <div class="isl lift" style="left:215px;top:220px;width:130px;height:50px;"></div>
+        <div class="isl lift" style="left:395px;top:150px;width:90px;height:50px;"></div>
         <i class="blk" style="left:247px;top:198px;"></i>
         <i class="blk" style="left:269px;top:198px;"></i>
         <i class="blk" style="left:291px;top:198px;"></i>
@@ -181,7 +183,7 @@
         <div class="sun" style="left:28px;top:22px;"></div>
         <div class="h-line" style="top:117px;"><span>中线 y=270</span></div>
         <div class="isl" style="left:-5px;top:235px;width:160px;height:60px;"></div>
-        <div class="isl" style="left:185px;top:150px;width:150px;height:50px;"></div>
+        <div class="isl lift" style="left:185px;top:150px;width:150px;height:50px;"></div>
         <i class="blk" style="left:216px;top:128px;"></i>
         <i class="blk" style="left:238px;top:128px;"></i>
         <i class="blk" style="left:260px;top:128px;"></i>
@@ -209,8 +211,8 @@
         <div class="sun" style="left:28px;top:22px;"></div>
         <div class="h-line" style="top:117px;"><span>中线 y=270</span></div>
         <div class="isl" style="left:-5px;top:235px;width:160px;height:60px;"></div>
-        <div class="isl" style="left:190px;top:140px;width:120px;height:50px;"></div>
-        <div class="isl" style="left:385px;top:175px;width:110px;height:50px;"></div>
+        <div class="isl lift" style="left:190px;top:140px;width:120px;height:50px;"></div>
+        <div class="isl lift" style="left:385px;top:175px;width:110px;height:50px;"></div>
         <i class="blk" style="left:217px;top:118px;"></i>
         <i class="blk" style="left:239px;top:118px;"></i>
         <i class="blk" style="left:261px;top:118px;"></i>

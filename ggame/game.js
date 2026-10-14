@@ -24,11 +24,20 @@
   const MAX_DRAG = 130;
   const LAUNCH_K = 0.25;
   const BIRD_R = 26;
+  // 弹弓能在发射台（I1，x = -10 … 310）上左右平移：中心 x 限制在这个区间内，两端都不会滑出岛面。
+  const SLING_MIN_X = 70, SLING_MAX_X = 300;
+  const SLING_HOME_X = 185;    // 每关开局回到发射台正中
+  const PRONG_DX = 33;         // 两个叉尖相对弹弓中心的横向偏移
+  let slingX = SLING_HOME_X;   // 弹弓当前中心 x
   // 奶龙「开始下坠」之后额外追加的重力比例：上升段完全不变，只有 vy > 0 的那一段掉得更快。
   // 木块不吃这个加成（改的是 bird 自身的受力，不是 engine.gravity）。
   const FALL_GRAVITY_BOOST = 0.3;
+  // 奶龙「下坠中砸中木块」那一下的额外冲量：按撞击时的动量，再给木块补一份。
+  // 1.0 = 补一份（冲击翻倍），1.5 = 补一份半，2.0 = 补两份（冲击三倍）。只推木块、不动奶龙 —— 出手弧线、落点、预演虚线全都不变。
+  const IMPACT_BOOST = 2.0;
 
   const RESTART_RECT = { x: WORLD_W - 150, y: 50, w: 140, h: 34 };
+  const MUTE_RECT = { x: WORLD_W - 198, y: 12, w: 40, h: 34 };
 
   // ---------- 状态 ----------
   let bird = null;
@@ -47,20 +56,37 @@
   let shake = 0;
   let time = 0;
 
+  // ---------- 拖拽手感 ----------
+  const MIN_PULL = 30;               // 拉力低于这个值算误触：奶龙回弹归位、不扣发数
+  const FOLLOW_TAU = 45;             // 奶龙阻尼跟随的时间常数（ms），不是硬跟指针
+  let dragTarget = { x: 0, y: 0 };   // 指针算出来的目标点
+  let maxPull = 0;
+  let releaseFrom = { x: 0, y: 0 }, releaseTo = { x: 0, y: 0 }, releaseAt = 0;
+  let returnFrom = { x: 0, y: 0 }, returnAt = 0;
+
   const birdSprite = new Image();
   birdSprite.src = 'assets/nailong_head.png';
   const SPR_W = 168, SPR_H = 144;
 
-  // ---------- 音效 ----------
+  // ---------- 音效（WebAudio 全合成，不依赖任何音频文件） ----------
   let audioCtx = null;
+  let muted = false;
+  let noiseBuf = null;
+  let lastHitAt = -1;
   function ensureAudio() {
     if (!audioCtx) {
       try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { }
+      if (audioCtx) {
+        const n = Math.floor(audioCtx.sampleRate * 0.4);
+        noiseBuf = audioCtx.createBuffer(1, n, audioCtx.sampleRate);
+        const d = noiseBuf.getChannelData(0);
+        for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+      }
     }
     if (audioCtx && audioCtx.state === 'suspended') audioCtx.resume();
   }
   function tone(freq, dur, type, vol, delay, slideTo) {
-    if (!audioCtx) return;
+    if (!audioCtx || muted) return;
     const t = audioCtx.currentTime + (delay || 0);
     const o = audioCtx.createOscillator();
     const g = audioCtx.createGain();
@@ -72,11 +98,81 @@
     o.connect(g); g.connect(audioCtx.destination);
     o.start(t); o.stop(t + dur + 0.03);
   }
-  function sLaunch() { tone(260, 0.18, 'sawtooth', 0.10, 0, 900); }
-  function sHit() { tone(170, 0.12, 'square', 0.12, 0, 110); }
-  function sClear() { tone(140, 0.10, 'square', 0.16, 0, 60); tone(90, 0.16, 'sawtooth', 0.12, 0.02, 45); }
-  function sWin() { tone(523, 0.16, 'sine', 0.22, 0); tone(659, 0.16, 'sine', 0.22, 0.13); tone(784, 0.16, 'sine', 0.22, 0.26); tone(1046, 0.4, 'sine', 0.24, 0.39); }
-  function sLose() { tone(330, 0.2, 'sine', 0.18, 0, 180); tone(220, 0.35, 'sine', 0.18, 0.2, 120); }
+  // 噪声 + 下滑低通 = 木头闷响的质感（撞击 / 击中 / 失败都靠它）
+  function thud(vol, freq, dur, delay) {
+    if (!audioCtx || !noiseBuf || muted) return;
+    const t = audioCtx.currentTime + (delay || 0);
+    const s = audioCtx.createBufferSource(); s.buffer = noiseBuf;
+    const f = audioCtx.createBiquadFilter(); f.type = 'lowpass'; f.Q.value = 1.4;
+    f.frequency.setValueAtTime(freq, t);
+    f.frequency.exponentialRampToValueAtTime(Math.max(60, freq * 0.35), t + dur);
+    const g = audioCtx.createGain();
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    s.connect(f); f.connect(g); g.connect(audioCtx.destination);
+    s.start(t); s.stop(t + dur + 0.02);
+  }
+  // 拨弦「嘣」：快速下滑的三角波 + 一点噪声
+  function pluck(f0, f1, dur, vol) {
+    if (!audioCtx || muted) return;
+    const t = audioCtx.currentTime;
+    const o = audioCtx.createOscillator(); o.type = 'triangle';
+    o.frequency.setValueAtTime(f0, t);
+    o.frequency.exponentialRampToValueAtTime(Math.max(1, f1), t + dur);
+    const g = audioCtx.createGain();
+    g.gain.setValueAtTime(vol, t);
+    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(t); o.stop(t + dur + 0.03);
+    thud(vol * 0.55, 1100, 0.09, 0);
+  }
+  // 磬：正弦 + 一个非整数倍泛音，尾巴长一点
+  function bell(freq, dur, vol, delay) {
+    tone(freq, dur, 'sine', vol, delay);
+    tone(freq * 2.76, dur * 0.45, 'sine', vol * 0.22, delay);
+  }
+
+  // 拉弓：一条常驻的锯齿经过带通，力度越大音越高、越响
+  let pullOsc = null, pullFilt = null, pullGain = null;
+  function pullStart() {
+    if (!audioCtx || muted || pullOsc) return;
+    pullOsc = audioCtx.createOscillator(); pullOsc.type = 'sawtooth';
+    pullFilt = audioCtx.createBiquadFilter(); pullFilt.type = 'bandpass'; pullFilt.Q.value = 7;
+    pullGain = audioCtx.createGain(); pullGain.gain.value = 0;
+    pullOsc.connect(pullFilt); pullFilt.connect(pullGain); pullGain.connect(audioCtx.destination);
+    pullOsc.frequency.value = 90; pullFilt.frequency.value = 320;
+    pullOsc.start();
+  }
+  function pullUpdate(t) {
+    if (!pullOsc) return;
+    const now = audioCtx.currentTime;
+    pullOsc.frequency.setTargetAtTime(90 + 230 * t, now, 0.05);
+    pullFilt.frequency.setTargetAtTime(320 + 1000 * t, now, 0.05);
+    pullGain.gain.setTargetAtTime(muted ? 0 : 0.015 + 0.035 * t, now, 0.06);
+  }
+  function pullStop() {
+    if (!pullOsc) return;
+    const o = pullOsc, g = pullGain;
+    g.gain.setTargetAtTime(0, audioCtx.currentTime, 0.04);
+    pullOsc = null; pullFilt = null; pullGain = null;
+    setTimeout(function () { try { o.stop(); } catch (e) { } }, 240);
+  }
+
+  function sLaunch() { pluck(680, 150, 0.22, 0.16); }
+  // 撞击：按力度分级音高与音量，并做 60ms 节流，密集碰撞不会叠成噪音
+  function sHit(k) {
+    if (!audioCtx || muted) return;
+    const now = audioCtx.currentTime;
+    if (now - lastHitAt < 0.06) return;
+    lastHitAt = now;
+    const s = Math.max(0.25, Math.min(1, typeof k === 'number' ? k : 0.5));
+    thud(0.05 + 0.15 * s, 420 + 620 * s, 0.08 + 0.10 * s, 0);
+  }
+  function sClear() { thud(0.15, 1200, 0.13, 0); tone(150, 0.10, 'square', 0.06, 0, 70); }
+  function sWin() { bell(523, 0.5, 0.20, 0); bell(659, 0.5, 0.20, 0.13); bell(784, 0.5, 0.20, 0.26); bell(1046, 0.9, 0.22, 0.39); }
+  function sLose() { tone(300, 0.30, 'sine', 0.13, 0, 150); tone(196, 0.55, 'sine', 0.13, 0.22, 110); thud(0.09, 320, 0.30, 0.04); }
+  function sClick() { tone(880, 0.05, 'triangle', 0.09, 0); thud(0.05, 2200, 0.04, 0); }
+  function sReturn() { pluck(220, 110, 0.16, 0.07); }
 
   // ---------- 关卡定义 ----------
   // islands: 浮空岛（静态），blocks 坐标即其中心（木块中心）。
@@ -173,7 +269,8 @@
       isStatic: true, friction: 0.9, restitution: 0.1, label: 'island'
     });
     Composite.add(world, body);
-    islands.push({ body, cx, top, w, h });
+    // top >= 460 的是贴底的发射台（各关都是 top:470），其余是浮空岛
+    islands.push({ body, cx, top, w, h, pad: top >= 460 });
   }
   function addBlock(x, y, w, h) {
     const body = Bodies.rectangle(x, y, w, h, {
@@ -203,6 +300,7 @@
 
   function buildLevel(i) {
     clearLevel();
+    setSlingX(SLING_HOME_X);   // 每一关开局弹弓回到发射台正中
     levelIndex = i;
     const L = LEVELS[i];
     shotsLeft = L.birds;
@@ -232,11 +330,61 @@
     flightTime = 0;
   }
 
+  // ---------- 弹弓平移 ----------
+  // 叉尖 / 锚点 / 皮兜 / 底座是一组联动坐标，整体一起挪，物理与绘制就都自动跟上。
+  function setSlingX(v) {
+    const nx = Math.max(SLING_MIN_X, Math.min(SLING_MAX_X, v));
+    if (nx === slingX) return;
+    slingX = nx;
+    SLING_BASE.x = slingX;
+    PRONG_L.x = slingX - PRONG_DX;
+    PRONG_R.x = slingX + PRONG_DX;
+    ANCHOR.x = slingX;
+    POCKET.x = slingX;
+    if (bird && (state === 'ready' || state === 'movingSling')) Body.setPosition(bird, { x: POCKET.x, y: POCKET.y });
+  }
+  // 热区：抓「奶龙上方的叉尖」或「奶龙下方的手柄」都是要挪弹弓，
+  // 中间那块留给奶龙自己 —— 拖它才是发射，两边不会抢。
+  function slingHit(p) {
+    if (Math.abs(p.x - slingX) > PRONG_DX + 28) return false;
+    const aboveProng = p.y >= PRONG_L.y - 24 && p.y <= POCKET.y - BIRD_R + 2;
+    const belowBird = p.y >= POCKET.y + BIRD_R - 2 && p.y <= SLING_BASE.y + 16;
+    return aboveProng || belowBird;
+  }
+
+  // ---------- 撞击威力：奶龙下坠中砸到木块的那一下，额外再给木块一份冲量 ----------
+  // 只改木块、不改奶龙，所以奶龙的出手弧线和落点保持原样。
+  // 推力方向顺着奶龙「撞击前」压过去的势头算（见下面 px / py），比直接用碰撞法线更符合手感。
+  // 速度必须用 Body.setVelocity 写回去：Matter 是 Verlet 积分，直接改 body.velocity 下一步会被覆盖。
+  function applyImpactBoost(A, B) {
+    if (state !== 'flying' || !bird) return;
+    if (A.label !== 'bird' && B.label !== 'bird') return;   // 必须是奶龙撞上去的
+    const blk = (A.label === 'block') ? A : ((B.label === 'block') ? B : null);
+    if (!blk) return;
+    const vx = (typeof bird._preVx === 'number') ? bird._preVx : bird.velocity.x;
+    const vy = (typeof bird._preVy === 'number') ? bird._preVy : bird.velocity.y;
+    if (vy <= 0) return;                                    // 只算「下坠中」的撞击
+    const sp = Math.sqrt(vx * vx + vy * vy);
+    if (sp < 0.01) return;
+    // 推力方向：顺着奶龙整条弧线压过去的势头。竖直分量不往下按 ——
+    // 木块就坐在岛面上，往岛里按会被卡死、一点都飞不起来，所以改成往上掀一小份。
+    let px = vx, py = -vy * 0.35;
+    if (Math.abs(px) < 0.01) px = (blk.position.x >= bird.position.x) ? 1 : -1;  // 垂直直落时朝木块那一侧掀
+    const pl = Math.sqrt(px * px + py * py);
+    // 按动量分配：奶龙越重、砸得越快，木块被打飞得越远
+    const push = IMPACT_BOOST * sp * (bird.mass / (bird.mass + blk.mass));
+    Body.setVelocity(blk, {
+      x: blk.velocity.x + (px / pl) * push,
+      y: blk.velocity.y + (py / pl) * push
+    });
+  }
+
   // ---------- 碰撞反馈（不改血、不销毁，只给手感） ----------
   Events.on(engine, 'collisionStart', function (evt) {
     for (let i = 0; i < evt.pairs.length; i++) {
       const pair = evt.pairs[i];
       const A = pair.bodyA, B = pair.bodyB;
+      applyImpactBoost(A, B);
       const n = pair.collision.normal || { x: 0, y: -1 };
       const rel = { x: A.velocity.x - B.velocity.x, y: A.velocity.y - B.velocity.y };
       let vn = rel.x * n.x + rel.y * n.y;
@@ -246,7 +394,7 @@
       shake = Math.max(shake, impact * 7);
       const mid = { x: (A.position.x + B.position.x) / 2, y: (A.position.y + B.position.y) / 2 };
       spawnParticles(mid.x, mid.y, '#c29a6b', Math.round(4 + impact * 8));
-      if (A._block || B._block) sHit();
+      if (A._block || B._block) sHit(impact);
     }
   });
 
@@ -270,6 +418,38 @@
   // ---------- 更新逻辑 ----------
   function update(dt) {
     time += dt;
+
+    // 拖拽手感：三段时间线动画
+    if (state === 'dragging' && bird) {
+      // 阻尼跟随：奶龙比指针慢一点，皮筋才有「绷住」的感觉
+      const k = Math.min(1, dt / FOLLOW_TAU);
+      const nx = bird.position.x + (dragTarget.x - bird.position.x) * k;
+      const ny = bird.position.y + (dragTarget.y - bird.position.y) * k;
+      Body.setPosition(bird, { x: nx, y: ny });
+      const pull = Math.hypot(nx - ANCHOR.x, ny - ANCHOR.y);
+      if (pull > maxPull) maxPull = pull;
+      pullUpdate(Math.min(1, pull / MAX_DRAG));
+    } else if (state === 'releasing' && bird) {
+      // 松手过渡：约 90ms 滑到指针最后指的位置，然后才交给物理
+      releaseAt += dt;
+      const t = Math.min(1, releaseAt / 90);
+      const e2 = 1 - Math.pow(1 - t, 3);
+      Body.setPosition(bird, {
+        x: releaseFrom.x + (releaseTo.x - releaseFrom.x) * e2,
+        y: releaseFrom.y + (releaseTo.y - releaseFrom.y) * e2
+      });
+      if (t >= 1) fireBird();
+    } else if (state === 'returning' && bird) {
+      // 取消发射：奶龙弹回皮兜，这一发不算数
+      returnAt += dt;
+      const t = Math.min(1, returnAt / 180);
+      const e2 = 1 - Math.pow(1 - t, 3);
+      Body.setPosition(bird, {
+        x: returnFrom.x + (POCKET.x - returnFrom.x) * e2,
+        y: returnFrom.y + (POCKET.y - returnFrom.y) * e2
+      });
+      if (t >= 1) state = 'ready';
+    }
 
     // 击倒判定：木块被撞倒/掉落/撞离原位即算击倒（无需打到岛下）
     for (let i = 0; i < blocks.length; i++) {
@@ -362,20 +542,40 @@
   }
 
   let activePointer = null;
+  let slingGrabDX = 0;
   canvas.addEventListener('pointerdown', function (e) {
     const p = toCanvas(e);
-    if (insideRect(p, RESTART_RECT)) { restart(); return; }
+    if (insideRect(p, RESTART_RECT)) { restart(); sClick(); return; }
+    if (insideRect(p, MUTE_RECT)) {
+      muted = !muted;
+      if (muted) pullStop();
+      else { ensureAudio(); sClick(); }
+      return;
+    }
     if (state !== 'ready' || !bird) return;
+    if (slingHit(p)) {
+      state = 'movingSling';
+      slingGrabDX = p.x - slingX;
+      activePointer = e.pointerId;
+      canvas.setPointerCapture(e.pointerId);
+      ensureAudio();
+      return;
+    }
     const dx = p.x - bird.position.x, dy = p.y - bird.position.y;
     if (Math.hypot(dx, dy) <= 70) {
       state = 'dragging';
       activePointer = e.pointerId;
+      dragTarget = { x: bird.position.x, y: bird.position.y };
+      maxPull = 0;
       canvas.setPointerCapture(e.pointerId);
       ensureAudio();
+      pullStart();
     }
   });
   canvas.addEventListener('pointermove', function (e) {
-    if (state !== 'dragging' || e.pointerId !== activePointer) return;
+    if (e.pointerId !== activePointer) return;
+    if (state === 'movingSling') { setSlingX(toCanvas(e).x - slingGrabDX); return; }
+    if (state !== 'dragging') return;
     const p = toCanvas(e);
     let dx = p.x - ANCHOR.x, dy = p.y - ANCHOR.y;
     const d = Math.hypot(dx, dy);
@@ -383,20 +583,44 @@
     let tx = ANCHOR.x + dx, ty = ANCHOR.y + dy;
     ty = Math.min(ty, 470 - BIRD_R - 2);
     if (tx < 40) tx = 40;
-    Body.setPosition(bird, { x: tx, y: ty });
+    // 只更新目标点，奶龙在 update() 里阻尼跟随（回弹手感的来源）
+    dragTarget = { x: tx, y: ty };
   });
-  function endDrag(e) {
-    if (state !== 'dragging' || e.pointerId !== activePointer) return;
+  // 真正出手：奶龙从静态转动态并赋初速
+  function fireBird() {
     const pos = { x: bird.position.x, y: bird.position.y };
-    const vx = (ANCHOR.x - pos.x) * LAUNCH_K;
-    const vy = (ANCHOR.y - pos.y) * LAUNCH_K;
     Body.setStatic(bird, false);
-    Body.setVelocity(bird, { x: vx, y: vy });
+    Body.setVelocity(bird, {
+      x: (ANCHOR.x - pos.x) * LAUNCH_K,
+      y: (ANCHOR.y - pos.y) * LAUNCH_K
+    });
     state = 'flying';
     shotsLeft--;
     flightTime = 0;
-    activePointer = null;
     sLaunch();
+  }
+  function endDrag(e) {
+    if (e.pointerId !== activePointer) return;
+    if (state === 'movingSling') { state = 'ready'; activePointer = null; sClick(); return; }
+    if (state !== 'dragging') return;
+    pullStop();
+    activePointer = null;
+    // 力度按「指针最后指的位置」判：奶龙是阻尼跟随、会落后指针，
+    // 若用奶龙当前位置，一次极快的甩手会被误判成「拉得太短」而取消。
+    const pull = Math.hypot(dragTarget.x - ANCHOR.x, dragTarget.y - ANCHOR.y);
+    if (pull < MIN_PULL) {
+      // 误触 / 拉过又推回弹弓：奶龙回弹归位，不发、也不扣奶龙数
+      state = 'returning';
+      returnAt = 0;
+      returnFrom = { x: bird.position.x, y: bird.position.y };
+      sReturn();
+      return;
+    }
+    // 松手过渡：先把奶龙滑到指针最后指的位置再交给物理，避免「手一滑就飞出去」
+    state = 'releasing';
+    releaseAt = 0;
+    releaseFrom = { x: bird.position.x, y: bird.position.y };
+    releaseTo = { x: dragTarget.x, y: dragTarget.y };
   }
   canvas.addEventListener('pointerup', endDrag);
   canvas.addEventListener('pointercancel', endDrag);
@@ -481,34 +705,51 @@
     const body = isl.body, w = isl.w, h = isl.h;
     const x = body.position.x, y = body.position.y;
     const top = y - h / 2;
-    // 青绿山石（上平下收，悬空）
+    // 青绿山石（浮空岛为等宽长方形，发射台保持上宽下收的梯形）
     const rock = ctx.createLinearGradient(0, top, 0, top + h);
     rock.addColorStop(0, '#7a9c80');
     rock.addColorStop(0.55, '#5f8470');
     rock.addColorStop(1, '#3f5f52');
-    ctx.fillStyle = rock;
-    ctx.beginPath();
-    ctx.moveTo(x - w / 2, top);
-    ctx.lineTo(x + w / 2, top);
-    ctx.lineTo(x + w * 0.44, top + h);
-    ctx.lineTo(x - w * 0.44, top + h);
-    ctx.closePath(); ctx.fill();
     // 山石顶部受光
     const hi = ctx.createLinearGradient(0, top, 0, top + h * 0.4);
     hi.addColorStop(0, 'rgba(240,220,170,0.22)');
     hi.addColorStop(1, 'rgba(240,220,170,0)');
-    ctx.fillStyle = hi;
-    ctx.beginPath();
-    ctx.moveTo(x - w / 2, top);
-    ctx.lineTo(x + w / 2, top);
-    ctx.lineTo(x + w * 0.4, top + h * 0.4);
-    ctx.lineTo(x - w * 0.4, top + h * 0.4);
-    ctx.closePath(); ctx.fill();
     // 苔草
     const g = ctx.createLinearGradient(0, top, 0, top + 18);
     g.addColorStop(0, '#93ad76'); g.addColorStop(1, '#6d8a58');
-    ctx.fillStyle = g;
-    roundRect(x - w / 2, top, w, 18, 9); ctx.fill();
+
+    if (isl.pad) {
+      // 发射台：保持原来的梯形，一点不动
+      ctx.fillStyle = rock;
+      ctx.beginPath();
+      ctx.moveTo(x - w / 2, top);
+      ctx.lineTo(x + w / 2, top);
+      ctx.lineTo(x + w * 0.44, top + h);
+      ctx.lineTo(x - w * 0.44, top + h);
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = hi;
+      ctx.beginPath();
+      ctx.moveTo(x - w / 2, top);
+      ctx.lineTo(x + w / 2, top);
+      ctx.lineTo(x + w * 0.4, top + h * 0.4);
+      ctx.lineTo(x - w * 0.4, top + h * 0.4);
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = g;
+      roundRect(x - w / 2, top, w, 18, 9); ctx.fill();
+    } else {
+      // 浮空岛：上下等宽的长方形，四个角小圆角
+      const r = Math.min(12, h * 0.22);
+      ctx.fillStyle = rock;
+      roundRect(x - w / 2, top, w, h, r); ctx.fill();
+      // 受光与苔草都裁在圆角长方形内，边线不会再收进去
+      ctx.save();
+      roundRect(x - w / 2, top, w, h, r); ctx.clip();
+      ctx.fillStyle = hi;
+      ctx.fillRect(x - w / 2, top, w, h * 0.4);
+      ctx.fillStyle = g;
+      roundRect(x - w / 2, top, w, 18, r); ctx.fill();
+      ctx.restore();
+    }
     // 草叶
     ctx.strokeStyle = 'rgba(80,110,70,0.55)'; ctx.lineWidth = 2;
     for (let i = 0; i < Math.floor(w / 22); i++) {
@@ -602,6 +843,22 @@
     ctx.fill();
   }
 
+  // 发射台上的「导轨」：暗示弹弓可以左右挪，两端就是活动边界
+  function drawSlingRail() {
+    const y = SLING_BASE.y + 7;
+    ctx.save();
+    ctx.strokeStyle = 'rgba(63,95,82,0.34)';
+    ctx.lineWidth = 2;
+    ctx.setLineDash([7, 7]);
+    ctx.beginPath(); ctx.moveTo(SLING_MIN_X, y); ctx.lineTo(SLING_MAX_X, y); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.beginPath();
+    ctx.moveTo(SLING_MIN_X, y - 6); ctx.lineTo(SLING_MIN_X, y + 6);
+    ctx.moveTo(SLING_MAX_X, y - 6); ctx.lineTo(SLING_MAX_X, y + 6);
+    ctx.stroke();
+    ctx.restore();
+  }
+
   function drawSlingshot() {
     const bx = SLING_BASE.x, by = SLING_BASE.y;
     const splitY = by - 62;                    // Y 形分叉点
@@ -633,7 +890,7 @@
       ctx.save();
       ctx.globalAlpha = sp.a;
       ctx.fillStyle = INK;
-      ctx.beginPath(); ctx.arc(sp.x, sp.y, sp.r, 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(sp.x + (slingX - SLING_HOME_X), sp.y, sp.r, 0, Math.PI * 2); ctx.fill();
       ctx.restore();
     }
   }
@@ -712,6 +969,56 @@
     }
     ctx.restore();
   }
+  // 拖拽指示：一条从奶龙朝发射方向的渐变箭头（越长越粗越红 = 力度越大），
+  // 外加奶龙身上一圈力度环。拉力不足 MIN_PULL 时整体变灰，
+  // 并在锚点处画出虚线死区 —— 一眼看出「拉出这个圈才会发射」。
+  function drawLaunchArrow() {
+    const bx = bird.position.x, by = bird.position.y;
+    const dx = ANCHOR.x - bx, dy = ANCHOR.y - by;
+    const pull = Math.hypot(dx, dy);
+    if (pull < 1) return;
+    const t = Math.min(1, pull / MAX_DRAG);
+    const ok = pull >= MIN_PULL;
+    const ux = dx / pull, uy = dy / pull;
+    const len = 46 + 150 * t;
+    const w = 4 + 9 * t;
+    const r = Math.round(95 + 97 * t), g = Math.round(132 - 75 * t), b = Math.round(112 - 69 * t);
+    const col = ok ? 'rgba(' + r + ',' + g + ',' + b + ',0.92)' : 'rgba(120,115,105,0.45)';
+    const ex = bx + ux * len, ey = by + uy * len;
+    ctx.save();
+    ctx.lineCap = 'round';
+    // 杆身
+    ctx.strokeStyle = col;
+    ctx.lineWidth = w;
+    ctx.beginPath();
+    ctx.moveTo(bx + ux * (BIRD_R + 3), by + uy * (BIRD_R + 3));
+    ctx.lineTo(ex, ey);
+    ctx.stroke();
+    // 箭头
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    ctx.moveTo(ex + ux * (12 + w), ey + uy * (12 + w));
+    ctx.lineTo(ex + uy * w * 1.6, ey - ux * w * 1.6);
+    ctx.lineTo(ex - uy * w * 1.6, ey + ux * w * 1.6);
+    ctx.closePath();
+    ctx.fill();
+    // 力度环
+    const rr = BIRD_R + 10;
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = 'rgba(60,55,45,0.16)';
+    ctx.beginPath(); ctx.arc(bx, by, rr, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = col;
+    ctx.beginPath(); ctx.arc(bx, by, rr, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * t); ctx.stroke();
+    ctx.restore();
+    if (!ok) {
+      ctx.save();
+      ctx.setLineDash([5, 6]);
+      ctx.lineWidth = 1.6;
+      ctx.strokeStyle = 'rgba(120,115,105,0.35)';
+      ctx.beginPath(); ctx.arc(ANCHOR.x, ANCHOR.y, MIN_PULL, 0, Math.PI * 2); ctx.stroke();
+      ctx.restore();
+    }
+  }
   function drawParticles() {
     for (let i = 0; i < particles.length; i++) {
       const pt = particles[i];
@@ -744,6 +1051,7 @@
     chip(WORLD_W - 150, 12, 140, 34, '剩余 × ' + shotsLeft);
     chip(12, 50, 130, 34, '得分 ' + score);
     chip(RESTART_RECT.x, RESTART_RECT.y, RESTART_RECT.w, RESTART_RECT.h, '↻ 重来');
+    chip(MUTE_RECT.x, MUTE_RECT.y, MUTE_RECT.w, MUTE_RECT.h, muted ? '🔇' : '🔊');
   }
 
   function render() {
@@ -754,10 +1062,15 @@
     drawBackground();
     for (let i = 0; i < islands.length; i++) drawIsland(islands[i]);
     for (let i = 0; i < blocks.length; i++) drawBlock(blocks[i]);
+    drawSlingRail();
     drawSlingshot();
-    if (state === 'ready' || state === 'dragging') drawBands();
+    if (state === 'ready' || state === 'dragging' || state === 'movingSling' ||
+        state === 'releasing' || state === 'returning') drawBands();
     if (bird) drawBird(bird);
-    if (state === 'dragging') drawTrajectory();
+    if (state === 'dragging' || state === 'releasing') {
+      drawTrajectory();
+      drawLaunchArrow();
+    }
     drawParticles();
     drawPopups();
     ctx.restore();
@@ -804,7 +1117,10 @@
   }
   function renderStars(n) {
     let s = '';
-    for (let i = 0; i < 3; i++) s += '<span class="' + (i < n ? 'on' : 'off') + '">★</span>';
+    for (let i = 0; i < 3; i++) {
+      // 亮星逐个弹出（面板弹入 0.30s 之后开始，每颗错开 0.13s）
+      s += '<span class="' + (i < n ? 'on pop' : 'off') + '" style="animation-delay:' + (0.34 + i * 0.13).toFixed(2) + 's">★</span>';
+    }
     levelStars.innerHTML = s;
   }
 
@@ -861,20 +1177,22 @@
   // ---------- 按钮 ----------
   document.getElementById('startBtn').addEventListener('click', function () {
     ensureAudio();
+    sClick();
     startOverlay.classList.add('hidden');
   });
-  document.getElementById('retryBtn').addEventListener('click', restart);
-  document.getElementById('replayBtn').addEventListener('click', restartGame);
-  document.getElementById('popupClose').addEventListener('click', hideVideo);
+  document.getElementById('retryBtn').addEventListener('click', function () { sClick(); restart(); });
+  document.getElementById('replayBtn').addEventListener('click', function () { sClick(); restartGame(); });
+  document.getElementById('popupClose').addEventListener('click', function () { sClick(); hideVideo(); });
   playHint.addEventListener('click', function () {
     winVideo.play().then(function () { playHint.classList.add('hidden'); }).catch(function () { });
   });
   nextBtn.addEventListener('click', function () {
+    sClick();
     levelOverlay.classList.add('hidden');
     buildLevel(levelIndex + 1);
     state = 'ready';
   });
-  replayLevelBtn.addEventListener('click', restart);
+  replayLevelBtn.addEventListener('click', function () { sClick(); restart(); });
 
   // 小窗拖拽
   (function () {
@@ -906,7 +1224,10 @@
   // 它就会被同一帧一起积分进去；且只对 state==='flying' 且 vy>0 的奶龙生效。
   function applyFallBoost() {
     if (state !== 'flying' || !bird) return;
-    if (bird.velocity.y <= 0) return;
+    // 记下「进入这一步」的速度：碰撞解算会改写速度，撞击威力判定要用撞击前的原速度。
+    bird._preVx = bird.velocity.x;
+    bird._preVy = bird.velocity.y;
+    if (bird._preVy <= 0) return;
     const gScale = (typeof engine.gravity.scale === 'number') ? engine.gravity.scale : 0.001;
     bird.force.y += bird.mass * engine.gravity.y * gScale * FALL_GRAVITY_BOOST;
   }
