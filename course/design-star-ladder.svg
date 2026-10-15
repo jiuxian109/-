@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540" font-family="'Noto Serif SC','Source Han Serif SC','Songti SC','SimSun',serif">
+<rect x="0" y="0" width="960" height="540" fill="#faf5e8"/>
+<line x1="0" y1="0" x2="0" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="44" y1="0" x2="44" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="88" y1="0" x2="88" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="132" y1="0" x2="132" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="176" y1="0" x2="176" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="220" y1="0" x2="220" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="264" y1="0" x2="264" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="308" y1="0" x2="308" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="352" y1="0" x2="352" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="396" y1="0" x2="396" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="440" y1="0" x2="440" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="484" y1="0" x2="484" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="528" y1="0" x2="528" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="572" y1="0" x2="572" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="616" y1="0" x2="616" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="660" y1="0" x2="660" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="704" y1="0" x2="704" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="748" y1="0" x2="748" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="792" y1="0" x2="792" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="836" y1="0" x2="836" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="880" y1="0" x2="880" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="924" y1="0" x2="924" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="0" x2="960" y2="0" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="44" x2="960" y2="44" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="88" x2="960" y2="88" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="132" x2="960" y2="132" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="176" x2="960" y2="176" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="220" x2="960" y2="220" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="264" x2="960" y2="264" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="308" x2="960" y2="308" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="352" x2="960" y2="352" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="396" x2="960" y2="396" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="440" x2="960" y2="440" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="484" x2="960" y2="484" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="528" x2="960" y2="528" stroke="#efe6d2" stroke-width="1"/>
+<text x="24" y="36" text-anchor="start" font-size="22" font-weight="700" fill="#2b2b2b" letter-spacing="1">星级阶梯：只看「剩几发」</text>
+<text x="24" y="58" text-anchor="start" font-size="12.5" font-weight="400" fill="#5a5750">奶龙 = 圆形；朱砂圈住的那只 = 三星门槛。门槛右边的每一只，都是「你还能浪费几发」</text>
+<rect x="20" y="74" width="920" height="74" rx="4" fill="#fffdf8" stroke="#2b2b2b" stroke-width="1"/>
+<rect x="20" y="74" width="5" height="74" fill="#4e7a5e"/>
+<text x="38" y="93" text-anchor="start" font-size="14" font-weight="700" fill="#2b2b2b">第 1 关 · 云间初试（教学关）</text>
+<text x="38" y="109" text-anchor="start" font-size="10.5" font-weight="400" fill="#5a5750">三星 = 用 ≤4 发（剩 ≥2 只）。教学关，容错 2 发；二星是保底档</text>
+<text x="38" y="124" text-anchor="start" font-size="10.5" font-weight="400" fill="#5a5750">路线占比 57.1% 偏高，但玩家基准率 36.3% 落在带内 —— 教学关这样刚好</text>
+<text x="38" y="139" text-anchor="start" font-size="10" font-weight="400" fill="#2b2b2b" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">3★ 用 ≤ 4 发（剩 ≥ 4） ｜ 2★ 用 ≤ 5 发（剩 5） ｜ 1★ 通关</text>
+<text x="38" y="153" text-anchor="start" font-size="10" font-weight="400" fill="#5a5750" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">路线占比 57.1% ｜ 实测基准率 36.3%</text>
+<circle cx="480" cy="114" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="480" cy="114" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<circle cx="506" cy="114" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="506" cy="114" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<circle cx="532" cy="114" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="532" cy="114" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<text x="532" y="117.5" text-anchor="middle" font-size="8.5" font-weight="400" fill="#5a5750" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">M</text>
+<circle cx="558" cy="114" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="558" cy="114" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<circle cx="558" cy="114" r="15" fill="none" stroke="#b23a2e" stroke-width="2"/>
+<circle cx="584" cy="114" r="10" fill="none" stroke="#9a958a" stroke-width="1.4"/>
+<circle cx="610" cy="114" r="10" fill="none" stroke="#9a958a" stroke-width="1.4"/>
+<line x1="480" y1="130" x2="610" y2="130" stroke="#9a958a" stroke-width="1"/>
+<text x="458" y="118" text-anchor="end" font-size="10" font-weight="400" fill="#5a5750">额度</text>
+<text x="950" y="98" text-anchor="end" font-size="9.5" font-weight="400" fill="#5a5750">维持 birds 6 / stars {three:2,two:1}</text>
+<rect x="20" y="158" width="920" height="74" rx="4" fill="#fffdf8" stroke="#2b2b2b" stroke-width="1"/>
+<rect x="20" y="158" width="5" height="74" fill="#4e7a5e"/>
+<text x="38" y="177" text-anchor="start" font-size="14" font-weight="700" fill="#2b2b2b">第 2 关 · 叠叠高</text>
+<text x="38" y="193" text-anchor="start" font-size="10.5" font-weight="400" fill="#5a5750">三星 = 用 ≤4 发（剩 ≥2 只）。护心块压塔底，第二发必须直击它</text>
+<text x="38" y="208" text-anchor="start" font-size="10.5" font-weight="400" fill="#5a5750">M=2 而 T3=4：几何上「一发不倒」的冗余很大，靠玩家手感才收到 44%</text>
+<text x="38" y="223" text-anchor="start" font-size="10" font-weight="400" fill="#2b2b2b" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">3★ 用 ≤ 4 发（剩 ≥ 4） ｜ 2★ 用 ≤ 5 发（剩 5） ｜ 1★ 通关</text>
+<text x="38" y="237" text-anchor="start" font-size="10" font-weight="400" fill="#5a5750" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">路线占比 26.3% ｜ 实测基准率 44.2%</text>
+<circle cx="480" cy="198" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="480" cy="198" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<circle cx="506" cy="198" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="506" cy="198" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<text x="506" y="201.5" text-anchor="middle" font-size="8.5" font-weight="400" fill="#5a5750" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">M</text>
+<circle cx="532" cy="198" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="532" cy="198" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<circle cx="558" cy="198" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="558" cy="198" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<circle cx="558" cy="198" r="15" fill="none" stroke="#b23a2e" stroke-width="2"/>
+<circle cx="584" cy="198" r="10" fill="none" stroke="#9a958a" stroke-width="1.4"/>
+<circle cx="610" cy="198" r="10" fill="none" stroke="#9a958a" stroke-width="1.4"/>
+<line x1="480" y1="214" x2="610" y2="214" stroke="#9a958a" stroke-width="1"/>
+<text x="458" y="202" text-anchor="end" font-size="10" font-weight="400" fill="#5a5750">额度</text>
+<text x="950" y="182" text-anchor="end" font-size="9.5" font-weight="400" fill="#5a5750">维持 birds 6；把 two 由 1 改 3（免得二星恒真）</text>
+<rect x="20" y="242" width="920" height="74" rx="4" fill="#fffdf8" stroke="#2b2b2b" stroke-width="1"/>
+<rect x="20" y="242" width="5" height="74" fill="#4e7a5e"/>
+<text x="38" y="261" text-anchor="start" font-size="14" font-weight="700" fill="#2b2b2b">第 3 关 · 一柱擎天</text>
+<text x="38" y="277" text-anchor="start" font-size="10.5" font-weight="400" fill="#5a5750">三星 = 用 ≤4 发。六层柱 + 右台高抛区，发数很容易浪费在右台上</text>
+<text x="38" y="292" text-anchor="start" font-size="10.5" font-weight="400" fill="#5a5750">M=3 时 T3=4 只留 1 发冗余，最脆的一关；M 变 3 就要重测</text>
+<text x="38" y="307" text-anchor="start" font-size="10" font-weight="400" fill="#2b2b2b" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">3★ 用 ≤ 4 发（剩 ≥ 4） ｜ 2★ 用 ≤ 5 发（剩 5） ｜ 1★ 通关</text>
+<text x="38" y="321" text-anchor="start" font-size="10" font-weight="400" fill="#5a5750" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">路线占比 30.4% ｜ 实测基准率 41%</text>
+<circle cx="480" cy="282" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="480" cy="282" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<circle cx="506" cy="282" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="506" cy="282" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<text x="506" y="285.5" text-anchor="middle" font-size="8.5" font-weight="400" fill="#5a5750" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">M</text>
+<circle cx="532" cy="282" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="532" cy="282" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<circle cx="558" cy="282" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="558" cy="282" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<circle cx="558" cy="282" r="15" fill="none" stroke="#b23a2e" stroke-width="2"/>
+<circle cx="584" cy="282" r="10" fill="none" stroke="#9a958a" stroke-width="1.4"/>
+<circle cx="610" cy="282" r="10" fill="none" stroke="#9a958a" stroke-width="1.4"/>
+<line x1="480" y1="298" x2="610" y2="298" stroke="#9a958a" stroke-width="1"/>
+<text x="458" y="286" text-anchor="end" font-size="10" font-weight="400" fill="#5a5750">额度</text>
+<text x="950" y="266" text-anchor="end" font-size="9.5" font-weight="400" fill="#5a5750">维持 birds 6；把 two 由 1 改 3</text>
+<rect x="20" y="326" width="920" height="74" rx="4" fill="#fffdf8" stroke="#2b2b2b" stroke-width="1"/>
+<rect x="20" y="326" width="5" height="74" fill="#4e7a5e"/>
+<text x="38" y="345" text-anchor="start" font-size="14" font-weight="700" fill="#2b2b2b">第 4 关 · 巅峰论道（收束关）</text>
+<text x="38" y="361" text-anchor="start" font-size="10.5" font-weight="400" fill="#5a5750">三星 = 用 ≤5 发（剩 ≥2 只）。三台递进，最少 4 发</text>
+<text x="38" y="376" text-anchor="start" font-size="10.5" font-weight="400" fill="#5a5750">M=4 而 T3=5：只容错 1 发，是四关里最紧的一关</text>
+<text x="38" y="391" text-anchor="start" font-size="10" font-weight="400" fill="#2b2b2b" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">3★ 用 ≤ 5 发（剩 ≥ 5） ｜ 2★ 用 ≤ 6 发（剩 6） ｜ 1★ 通关</text>
+<text x="38" y="405" text-anchor="start" font-size="10" font-weight="400" fill="#5a5750" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">路线占比 22.6% ｜ 实测基准率 38.6%</text>
+<circle cx="480" cy="366" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="480" cy="366" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<circle cx="506" cy="366" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="506" cy="366" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<circle cx="532" cy="366" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="532" cy="366" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<circle cx="558" cy="366" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="558" cy="366" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<text x="558" y="369.5" text-anchor="middle" font-size="8.5" font-weight="400" fill="#5a5750" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">M</text>
+<circle cx="584" cy="366" r="10" fill="#b98247" stroke="#2b2b2b" stroke-width="1.4"/>
+<circle cx="584" cy="366" r="5.5" fill="none" stroke="#faf5e8" stroke-width="1"/>
+<circle cx="584" cy="366" r="15" fill="none" stroke="#b23a2e" stroke-width="2"/>
+<circle cx="610" cy="366" r="10" fill="none" stroke="#9a958a" stroke-width="1.4"/>
+<circle cx="636" cy="366" r="10" fill="none" stroke="#9a958a" stroke-width="1.4"/>
+<line x1="480" y1="382" x2="636" y2="382" stroke="#9a958a" stroke-width="1"/>
+<text x="458" y="370" text-anchor="end" font-size="10" font-weight="400" fill="#5a5750">额度</text>
+<text x="950" y="350" text-anchor="end" font-size="9.5" font-weight="400" fill="#5a5750">维持 birds 7；把 two 由 1 改 3</text>
+<rect x="20" y="412" width="920" height="66" rx="4" fill="#fffdf8" stroke="#2b2b2b" stroke-width="1"/>
+<text x="36" y="432" text-anchor="start" font-size="12" font-weight="700" fill="#5a5750" letter-spacing="1">这张表的规矩</text>
+<text x="36" y="450" text-anchor="start" font-size="11" font-weight="400" fill="#2b2b2b">① 门槛只能取「最少通关发数 M」：「通关」这个词本身占掉一条判据，所以阈值不是能单独拧的旋钮 —— 想调三星率，只能调摆放（改 M）或调额度（改 B）。</text>
+<text x="36" y="464" text-anchor="start" font-size="11" font-weight="400" fill="#2b2b2b">② 左边的色条：青绿 = 额度留了 ≥1 发余量；朱砂 = 额度只剩「最少发数」本身（那种关里二星档事实上消失）。</text>
+<text x="36" y="476" text-anchor="start" font-size="11" font-weight="400" fill="#2b2b2b">③ 路线占比 = 通关路线的构成（几何）；实测基准率 = 8000 条随机路线里拿到三星的比例（玩家）。两个数不一样，看后者。</text>
+</svg>

@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="660" viewBox="0 0 960 660" font-family="'Noto Serif SC','Source Han Serif SC','Songti SC','SimSun',serif">
+<rect x="0" y="0" width="960" height="660" fill="#faf5e8"/>
+<line x1="0" y1="0" x2="0" y2="540" stroke="#e2d6b8" stroke-width="1"/>
+<line x1="44" y1="0" x2="44" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="88" y1="0" x2="88" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="132" y1="0" x2="132" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="176" y1="0" x2="176" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="220" y1="0" x2="220" y2="540" stroke="#e2d6b8" stroke-width="1"/>
+<line x1="264" y1="0" x2="264" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="308" y1="0" x2="308" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="352" y1="0" x2="352" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="396" y1="0" x2="396" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="440" y1="0" x2="440" y2="540" stroke="#e2d6b8" stroke-width="1"/>
+<line x1="484" y1="0" x2="484" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="528" y1="0" x2="528" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="572" y1="0" x2="572" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="616" y1="0" x2="616" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="660" y1="0" x2="660" y2="540" stroke="#e2d6b8" stroke-width="1"/>
+<line x1="704" y1="0" x2="704" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="748" y1="0" x2="748" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="792" y1="0" x2="792" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="836" y1="0" x2="836" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="880" y1="0" x2="880" y2="540" stroke="#e2d6b8" stroke-width="1"/>
+<line x1="924" y1="0" x2="924" y2="540" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="0" x2="960" y2="0" stroke="#e2d6b8" stroke-width="1"/>
+<line x1="0" y1="44" x2="960" y2="44" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="88" x2="960" y2="88" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="132" x2="960" y2="132" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="176" x2="960" y2="176" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="220" x2="960" y2="220" stroke="#e2d6b8" stroke-width="1"/>
+<line x1="0" y1="264" x2="960" y2="264" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="308" x2="960" y2="308" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="352" x2="960" y2="352" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="396" x2="960" y2="396" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="440" x2="960" y2="440" stroke="#e2d6b8" stroke-width="1"/>
+<line x1="0" y1="484" x2="960" y2="484" stroke="#efe6d2" stroke-width="1"/>
+<line x1="0" y1="528" x2="960" y2="528" stroke="#efe6d2" stroke-width="1"/>
+<defs><clipPath id="canvasClip"><rect x="0" y="0" width="960" height="540"/></clipPath></defs>
+<g clip-path="url(#canvasClip)">
+<rect x="-10" y="470" width="320" height="120" rx="3" fill="#e7efe6" stroke="#4e7a5e" stroke-width="1.25"/><line x1="-10" y1="470" x2="310" y2="470" stroke="#4e7a5e" stroke-width="2.5"/><rect x="465" y="400" width="190" height="100" rx="3" fill="#e7efe6" stroke="#4e7a5e" stroke-width="1.25"/><line x1="465" y1="400" x2="655" y2="400" stroke="#4e7a5e" stroke-width="2.5"/><rect x="785" y="300" width="170" height="110" rx="3" fill="#e7efe6" stroke="#4e7a5e" stroke-width="1.25"/><line x1="785" y1="300" x2="955" y2="300" stroke="#4e7a5e" stroke-width="2.5"/>
+<rect x="0" y="0" width="960" height="96" fill="#8a8578" opacity="0.07"/>
+<line x1="0" y1="96" x2="960" y2="96" stroke="#8a8578" stroke-width="1" stroke-dasharray="8 5"/>
+<text x="950" y="91" text-anchor="end" font-size="10.5" font-weight="400" fill="#8a8578">HUD 专用带 0–96px：木块顶边不得进入</text>
+<circle cx="185" cy="384" r="130" fill="none" stroke="#2b2b2b" stroke-width="1"/>
+<circle cx="185" cy="384" r="3" fill="#b23a2e"/>
+<text x="191" y="248" text-anchor="start" font-size="11" font-weight="400" fill="#5a5750">弹弓出膛点与拖拽可达域 r=130</text>
+<rect x="483" y="356" width="44" height="44" fill="#fbeee0" stroke="#2b2b2b" stroke-width="1"/>
+<rect x="486" y="359" width="38" height="38" fill="none" stroke="#b98247" stroke-width="1.5" opacity="0.9"/>
+<rect x="530" y="356" width="60" height="44" fill="#fbeee0" stroke="#b98247" stroke-width="2"/>
+<circle cx="560" cy="378" r="16" fill="none" stroke="#2b2b2b" stroke-width="1"/>
+<circle cx="560" cy="378" r="10" fill="none" stroke="#2b2b2b" stroke-width="1"/>
+<circle cx="560" cy="378" r="4" fill="none" stroke="#2b2b2b" stroke-width="1"/>
+<text x="560" y="382" text-anchor="middle" font-size="13" font-weight="600" fill="#2b2b2b">护</text>
+<rect x="538" y="312" width="44" height="44" fill="#fbeee0" stroke="#2b2b2b" stroke-width="1"/>
+<rect x="541" y="315" width="38" height="38" fill="none" stroke="#b98247" stroke-width="1.5" opacity="0.9"/>
+<rect x="538" y="268" width="44" height="44" fill="#fbeee0" stroke="#2b2b2b" stroke-width="1"/>
+<rect x="541" y="271" width="38" height="38" fill="none" stroke="#b98247" stroke-width="1.5" opacity="0.9"/>
+<rect x="538" y="224" width="44" height="44" fill="#fbeee0" stroke="#2b2b2b" stroke-width="1"/>
+<rect x="541" y="227" width="38" height="38" fill="none" stroke="#b98247" stroke-width="1.5" opacity="0.9"/>
+<rect x="538" y="180" width="44" height="44" fill="#fbeee0" stroke="#2b2b2b" stroke-width="1"/>
+<rect x="541" y="183" width="38" height="38" fill="none" stroke="#b98247" stroke-width="1.5" opacity="0.9"/>
+<rect x="536" y="152" width="48" height="28" fill="#fbeee0" stroke="#b98247" stroke-width="2"/>
+<circle cx="560" cy="166" r="8" fill="none" stroke="#2b2b2b" stroke-width="1"/>
+<text x="560" y="170" text-anchor="middle" font-size="13" font-weight="600" fill="#2b2b2b">护</text>
+<rect x="808" y="256" width="44" height="44" fill="#fbeee0" stroke="#2b2b2b" stroke-width="1"/>
+<rect x="811" y="259" width="38" height="38" fill="none" stroke="#b98247" stroke-width="1.5" opacity="0.9"/>
+<rect x="808" y="212" width="44" height="44" fill="#fbeee0" stroke="#2b2b2b" stroke-width="1"/>
+<rect x="811" y="215" width="38" height="38" fill="none" stroke="#b98247" stroke-width="1.5" opacity="0.9"/>
+<rect x="878" y="256" width="44" height="44" fill="#fbeee0" stroke="#2b2b2b" stroke-width="1"/>
+<rect x="881" y="259" width="38" height="38" fill="none" stroke="#b98247" stroke-width="1.5" opacity="0.9"/>
+<path d="M67.2 438.9 L96.4 425.3 L125.4 412.1 L154.1 399.2 L182.7 386.7 L211 374.6 L239 362.9 L266.9 351.5 L294.5 340.5 L321.9 329.9 L349.1 319.6 L376 309.7 L402.8 300.2 L429.3 290.9 L455.6 282.1 L481.8 273.6 L507.7 265.4 L533.4 257.6 L558.8 250.1 L584.1 242.9 L609.2 236.1 L634.1 229.6 L658.8 223.5 L683.3 217.6 L707.6 212.1 L731.7 206.9 L755.6 202 L779.3 197.5 L802.8 193.2 L826.1 189.3 L849.3 185.6 L872.2 182.3 L895 179.3 L917.6 176.5 L940 174.1 L962.3 172 L984.3 170.1 L1006.2 168.6" fill="none" stroke="#faf5e8" stroke-width="6" stroke-dasharray="7 5" stroke-linecap="round"/>
+<path d="M67.2 438.9 L96.4 425.3 L125.4 412.1 L154.1 399.2 L182.7 386.7 L211 374.6 L239 362.9 L266.9 351.5 L294.5 340.5 L321.9 329.9 L349.1 319.6 L376 309.7 L402.8 300.2 L429.3 290.9 L455.6 282.1 L481.8 273.6 L507.7 265.4 L533.4 257.6 L558.8 250.1 L584.1 242.9 L609.2 236.1 L634.1 229.6 L658.8 223.5 L683.3 217.6 L707.6 212.1 L731.7 206.9 L755.6 202 L779.3 197.5 L802.8 193.2 L826.1 189.3 L849.3 185.6 L872.2 182.3 L895 179.3 L917.6 176.5 L940 174.1 L962.3 172 L984.3 170.1 L1006.2 168.6" fill="none" stroke="#b23a2e" stroke-width="2" stroke-dasharray="7 5" stroke-linecap="round"/>
+<line x1="67.1799876852355" y1="438.94037402629095" x2="2.3789809121150256" y2="469.157579740751" stroke="#b23a2e" stroke-width="1.5" stroke-linecap="round"/>
+<polygon points="2.3789809121150256,469.157579740751 7.740496498387869,463.22005916241585 10.373701345050694,468.86698517920354" fill="#b23a2e"/>
+<circle cx="1006.2" cy="168.6" r="3" fill="#b23a2e"/>
+<path d="M63.7 409.8 L93.8 403.4 L123.6 397.3 L153.2 391.6 L182.6 386.2 L211.7 381.1 L240.6 376.3 L269.3 371.8 L297.7 367.6 L325.9 363.8 L353.9 360.2 L381.7 357 L409.2 354.1 L436.5 351.4 L463.6 349.1 L490.5 347 L517.2 345.3 L543.6 343.8 L569.9 342.6 L595.9 341.7 L621.7 341.1 L647.3 340.8 L672.7 340.7 L697.9 340.9 L723 341.4 L747.8 342.2 L772.4 343.2 L796.8 344.5 L821 346.1 L845 347.9 L868.8 350 L892.5 352.4 L915.9 355 L939.2 357.8 L962.3 361 L985.2 364.3 L1007.9 367.9" fill="none" stroke="#faf5e8" stroke-width="5.25" stroke-dasharray="3 5" stroke-linecap="round"/>
+<path d="M63.7 409.8 L93.8 403.4 L123.6 397.3 L153.2 391.6 L182.6 386.2 L211.7 381.1 L240.6 376.3 L269.3 371.8 L297.7 367.6 L325.9 363.8 L353.9 360.2 L381.7 357 L409.2 354.1 L436.5 351.4 L463.6 349.1 L490.5 347 L517.2 345.3 L543.6 343.8 L569.9 342.6 L595.9 341.7 L621.7 341.1 L647.3 340.8 L672.7 340.7 L697.9 340.9 L723 341.4 L747.8 342.2 L772.4 343.2 L796.8 344.5 L821 346.1 L845 347.9 L868.8 350 L892.5 352.4 L915.9 355 L939.2 357.8 L962.3 361 L985.2 364.3 L1007.9 367.9" fill="none" stroke="#5a5750" stroke-width="1.25" stroke-dasharray="3 5" stroke-linecap="round"/>
+<line x1="63.709697509008095" y1="409.78104966140216" x2="-2.999968861037459" y2="423.96062697517334" stroke="#b23a2e" stroke-width="1.5" stroke-linecap="round"/>
+<polygon points="-2.999968861037459,423.96062697517334 3.5597829423911467,419.3813632486104 4.855216958148595,425.47590112398547" fill="#b23a2e"/>
+<circle cx="1007.9" cy="367.9" r="3" fill="#5a5750"/>
+<path d="M117.3 470.7 L134.1 449.2 L150.7 428.1 L167.3 407.5 L183.7 387.4 L199.9 367.6 L216.1 348.3 L232.1 329.5 L247.9 311 L263.7 293 L279.3 275.4 L294.8 258.2 L310.2 241.5 L325.4 225.1 L340.6 209.2 L355.6 193.6 L370.5 178.5 L385.2 163.7 L399.9 149.4 L414.4 135.4 L428.8 121.8 L443.1 108.6 L457.3 95.8 L471.4 83.4 L485.4 71.3 L499.2 59.6 L513 48.3 L526.6 37.4 L540.1 26.8 L553.5 16.5 L566.8 6.7 L580 -2.9 L593.1 -12 L606.1 -20.8 L619 -29.3 L631.8 -37.4 L644.5 -45.2 L657 -52.7 L669.5 -59.8 L681.9 -66.6 L694.2 -73 L706.3 -79.1 L718.4 -84.9 L730.4 -90.4 L742.3 -95.6 L754.1 -100.4 L765.8 -105 L777.4 -109.2 L788.9 -113.1 L800.3 -116.7 L811.7 -120 L822.9 -123 L834.1 -125.7 L845.1 -128.1 L856.1 -130.2 L867 -132 L877.8 -133.5 L888.5 -134.7 L899.1 -135.7 L909.7 -136.3 L920.1 -136.7 L930.5 -136.8 L940.8 -136.7 L951 -136.2 L961.1 -135.5 L971.2 -134.5 L981.1 -133.2 L991 -131.7 L1000.8 -129.9" fill="none" stroke="#faf5e8" stroke-width="5.25" stroke-dasharray="3 5" stroke-linecap="round"/>
+<path d="M117.3 470.7 L134.1 449.2 L150.7 428.1 L167.3 407.5 L183.7 387.4 L199.9 367.6 L216.1 348.3 L232.1 329.5 L247.9 311 L263.7 293 L279.3 275.4 L294.8 258.2 L310.2 241.5 L325.4 225.1 L340.6 209.2 L355.6 193.6 L370.5 178.5 L385.2 163.7 L399.9 149.4 L414.4 135.4 L428.8 121.8 L443.1 108.6 L457.3 95.8 L471.4 83.4 L485.4 71.3 L499.2 59.6 L513 48.3 L526.6 37.4 L540.1 26.8 L553.5 16.5 L566.8 6.7 L580 -2.9 L593.1 -12 L606.1 -20.8 L619 -29.3 L631.8 -37.4 L644.5 -45.2 L657 -52.7 L669.5 -59.8 L681.9 -66.6 L694.2 -73 L706.3 -79.1 L718.4 -84.9 L730.4 -90.4 L742.3 -95.6 L754.1 -100.4 L765.8 -105 L777.4 -109.2 L788.9 -113.1 L800.3 -116.7 L811.7 -120 L822.9 -123 L834.1 -125.7 L845.1 -128.1 L856.1 -130.2 L867 -132 L877.8 -133.5 L888.5 -134.7 L899.1 -135.7 L909.7 -136.3 L920.1 -136.7 L930.5 -136.8 L940.8 -136.7 L951 -136.2 L961.1 -135.5 L971.2 -134.5 L981.1 -133.2 L991 -131.7 L1000.8 -129.9" fill="none" stroke="#5a5750" stroke-width="1.25" stroke-dasharray="3 5" stroke-linecap="round"/>
+<line x1="117.27723771417759" y1="470.6811828967394" x2="80.02971845697526" y2="518.3558334899461" stroke="#b23a2e" stroke-width="1.5" stroke-linecap="round"/>
+<polygon points="80.02971845697526,518.3558334899461 82.11128588930977,510.6313867767734 87.02113935156449,514.4673847150873" fill="#b23a2e"/>
+<circle cx="1000.8" cy="-129.9" r="3" fill="#5a5750"/>
+<rect x="-10" y="470" width="320" height="6" fill="#4e7a5e" opacity="0.35"/><text x="150" y="582" text-anchor="middle" font-size="10.5" font-weight="400" fill="#4e7a5e" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">岛面 470 · 320×120</text><rect x="465" y="400" width="190" height="6" fill="#4e7a5e" opacity="0.35"/><text x="560" y="492" text-anchor="middle" font-size="10.5" font-weight="400" fill="#4e7a5e" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">岛面 400 · 190×100</text><rect x="785" y="300" width="170" height="6" fill="#4e7a5e" opacity="0.35"/><text x="945" y="322" text-anchor="end" font-size="10.5" font-weight="400" fill="#4e7a5e" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">岛面 300 · 170×110</text>
+<line x1="398" y1="300" x2="338" y2="303" stroke="#5a5750" stroke-width="1" stroke-dasharray="2 3" opacity="0.85"/>
+<circle cx="398" cy="300" r="2.2" fill="#5a5750"/>
+<line x1="452" y1="390" x2="374" y2="393" stroke="#5a5750" stroke-width="1" stroke-dasharray="2 3" opacity="0.85"/>
+<circle cx="452" cy="390" r="2.2" fill="#5a5750"/>
+<line x1="710" y1="158" x2="775.1" y2="161" stroke="#5a5750" stroke-width="1" stroke-dasharray="2 3" opacity="0.85"/>
+<circle cx="710" cy="158" r="2.2" fill="#5a5750"/>
+<line x1="530" y1="142" x2="632" y2="145" stroke="#5a5750" stroke-width="1" stroke-dasharray="2 3" opacity="0.85"/>
+<circle cx="530" cy="142" r="2.2" fill="#5a5750"/>
+</g>
+<rect x="0" y="0" width="960" height="34" fill="#faf5e8" opacity="0.92"/>
+<line x1="0" y1="34" x2="960" y2="34" stroke="#2b2b2b" stroke-width="1" opacity="0.35"/>
+<text x="14" y="23" text-anchor="start" font-size="17" font-weight="700" fill="#2b2b2b" letter-spacing="0.5">第 3 关 · 一柱擎天（六层柱）</text>
+<text x="956" y="23" text-anchor="end" font-size="12" font-weight="400" fill="#5a5750" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">960×540 · 木块 10 · 奶龙 6</text>
+<text x="398" y="300" text-anchor="end" font-size="12" font-weight="400" fill="#2b2b2b">柱脚绊块：先把它顶开</text>
+<text x="452" y="390" text-anchor="end" font-size="12" font-weight="400" fill="#2b2b2b">护心柱脚（墨圈）：只能直击</text>
+<text x="710" y="158" text-anchor="start" font-size="12" font-weight="400" fill="#2b2b2b">顶檐 48×28 也是护心块</text>
+<text x="530" y="142" text-anchor="start" font-size="12" font-weight="400" fill="#2b2b2b">六层柱：中间两层只有少数角度打得到</text>
+<line x1="0" y1="540" x2="960" y2="540" stroke="#2b2b2b" stroke-width="1" opacity="0.45"/>
+<text x="24" y="560" text-anchor="start" font-size="11" font-weight="700" fill="#5a5750" letter-spacing="1.5">图例 / LEGEND</text>
+<rect x="24" y="570" width="22" height="12" fill="#e7efe6" stroke="#4e7a5e" stroke-width="1.25"/>
+<line x1="24" y1="570" x2="46" y2="570" stroke="#4e7a5e" stroke-width="2.5"/>
+<text x="54" y="580" text-anchor="start" font-size="11.5" font-weight="400" fill="#2b2b2b">青绿 = 岛体（岛面线 / 岛身）</text>
+<rect x="24" y="585" width="22" height="14" fill="#fbeee0" stroke="#2b2b2b" stroke-width="1"/>
+<text x="54" y="596" text-anchor="start" font-size="11.5" font-weight="400" fill="#2b2b2b">赭木 + 墨框 = 普通木块 44×44</text>
+<rect x="24" y="601" width="22" height="14" fill="#fbeee0" stroke="#b98247" stroke-width="2"/>
+<circle cx="35" cy="608" r="4" fill="none" stroke="#2b2b2b" stroke-width="1"/>
+<text x="54" y="612" text-anchor="start" font-size="11.5" font-weight="400" fill="#2b2b2b">赭木 + 墨圈 = 护心块（免疫连锁）</text>
+<rect x="24" y="617" width="22" height="14" fill="#b23a2e" stroke="#7f2a21" stroke-width="1.5"/>
+<text x="35" y="627" text-anchor="middle" font-size="9" font-weight="400" fill="#faf5e8">印</text>
+<text x="54" y="628" text-anchor="start" font-size="11.5" font-weight="400" fill="#2b2b2b">朱砂实心 = 落印块（需压平 / 掀翻）</text>
+<line x1="24" y1="636" x2="46" y2="636" stroke="#b23a2e" stroke-width="2" stroke-dasharray="7 5"/>
+<line x1="24" y1="645" x2="46" y2="645" stroke="#5a5750" stroke-width="1.25" stroke-dasharray="3 5"/>
+<text x="54" y="644" text-anchor="start" font-size="11.5" font-weight="400" fill="#2b2b2b">朱砂虚线 = 主弹道 ｜ 墨灰点线 = 备选</text>
+<rect x="24" y="649" width="22" height="14" fill="#faf5e8" stroke="#b23a2e" stroke-width="1.5" stroke-dasharray="4 3"/>
+<text x="54" y="660" text-anchor="start" font-size="11.5" font-weight="400" fill="#2b2b2b">朱砂批注 = 当前有缺陷，需修</text>
+<text x="468" y="560" text-anchor="start" font-size="11" font-weight="700" fill="#5a5750" letter-spacing="1.5">这一关怎么打</text>
+<text x="468" y="580" text-anchor="start" font-size="11.5" font-weight="400" fill="#5a5750">底护心 + 四层普通 + 顶檐一块小护心：顶檐又小又薄，打它只是削檐，打柱身才整根倒</text>
+<text x="468" y="596" text-anchor="start" font-size="11.5" font-weight="400" fill="#2b2b2b">第一发 · 柱腰：拦腰打断四层柱，上半截自己塌（护心块不受连锁影响）</text>
+<text x="482" y="612" text-anchor="start" font-size="10" font-weight="400" fill="#5a5750" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">弹道 1：155° 拉满 → (1006, 169)</text>
+<text x="468" y="628" text-anchor="start" font-size="11.5" font-weight="400" fill="#2b2b2b">第二发 · 柱脚：柱脚那块护心必须直击：它不倒，整根柱子都不算完</text>
+<text x="482" y="644" text-anchor="start" font-size="10" font-weight="400" fill="#5a5750" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">弹道 2：168° 拉满 → (1008, 368)</text>
+<text x="468" y="660" text-anchor="start" font-size="11.5" font-weight="400" fill="#2b2b2b">第三发 · 高抛右台：右台二层 + 孤石在走廊之上，柱不倒完够不着</text>
+<text x="482" y="676" text-anchor="start" font-size="10" font-weight="400" fill="#5a5750" font-family="'Cascadia Mono',Consolas,'Courier New',monospace">弹道 3：128° 拉满 → (1001, -130)</text>
+<text x="468" y="676" text-anchor="start" font-size="9.5" font-weight="400" fill="#5a5750">弹道是离线仿真积分（重力 0.001、空气阻力 0.008、60Hz），只画到第一块木块之前。</text>
+<text x="468" y="692" text-anchor="start" font-size="9.5" font-weight="400" fill="#5a5750">撞击之后的连锁要自己想象；图上的角度是「一个能打到」的例子，不是唯一解。</text>
+</svg>

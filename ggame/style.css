@@ -1,13 +1,101 @@
+/* DDD —— 界面样式
+ * ---------------------------------------------------------------------------
+ * 视觉语言：一纸水墨。宣纸为底、浓墨为骨、朱砂为记。
+ *
+ * 【改这个文件之前先读这四条】
+ *   1. 只用 :root 里的 token，不写裸色值、不写裸字号、不写裸圆角。
+ *   2. 不用渐变、不用彩色 emoji、不用「深底 + 亮边」的 1px 描边。
+ *      图标一律走 index.html 里的 <symbol> + <use>。
+ *   3. 正文对比度 ≥ 4.5:1，大字号与图形 ≥ 3:1。
+ *      --ink-3 是承载文字的下限；--ink-4 只许做分隔线、描边这类装饰。
+ *   4. 圆角只有 --r-chip / --r-card / --r-panel 三档（2~4px）。
+ *      这里是裁纸，不是药丸；12px 以上的圆角一律不要。
+ */
+:root {
+  /* 纸 —— 由亮到暗三档 */
+  --paper:    #faf5e8;
+  --paper-2:  #f2e9d6;
+  --paper-3:  #e8dcc3;
+
+  /* 墨 —— 由浓到淡四档 */
+  --ink:      #2f2a22;
+  --ink-2:    #4a4438;
+  --ink-3:    #6b6353;
+  --ink-4:    #8a7f6b;   /* 装饰专用，禁止承载文字：对 --paper 只有 3.62:1 */
+
+  /* 朱砂 —— 全站唯一的强调色 */
+  --seal:      #b23a2e;
+  --seal-deep: #8f2c22;
+  --seal-wash: rgba(178, 58, 46, 0.10);
+
+  /* 石绿 —— 只在选关卡片的界格线上出现 */
+  --jade:      #5f8470;
+  --jade-deep: #3f5f52;
+
+  /* 装裱底 —— 画布外面那一圈暗色，不再是原来的蓝 */
+  --mount:   #16140f;
+  --mount-2: #221e17;
+  --scrim:   rgba(22, 20, 15, 0.68);
+
+  /* 字体：标题用宋、正文用黑。两个都留系统兜底，不引外链字体。
+     西文排在 SimSun 之前 —— CSS 是逐字回退的，Georgia/Palatino 只吃拉丁字母和数字，
+     汉字继续落到 SimSun，这样「DDD」不会用宋体那套发虚的拉丁字形。 */
+  --font-display: "Source Han Serif SC", "Noto Serif SC", "Songti SC", "STSong",
+                  "Palatino Linotype", "Book Antiqua", Georgia, "SimSun", serif;
+  --font-body: "Segoe UI", "Microsoft YaHei", "PingFang SC", system-ui, sans-serif;
+
+  /* 间距：4 的倍数，只许用这六档 */
+  --s1: 4px;
+  --s2: 8px;
+  --s3: 12px;
+  --s4: 16px;
+  --s5: 24px;
+  --s6: 32px;
+
+  /* 圆角：三档，都是「裁纸」级别的直角 */
+  --r-chip:  2px;
+  --r-card:  3px;
+  --r-panel: 4px;
+
+  /* 阴影：全站只有两条，而且都带纸的色相、不用纯黑。
+     负 spread 是关键 —— 正 spread 会让阴影从四周鼓出来，看着像浮起的贴纸；
+     收进去以后只有下缘有厚度，才像纸压在纸上。 */
+  --lift:      0 18px 44px -12px rgba(46, 42, 36, 0.30);
+  --lift-soft: 0 8px 20px -8px rgba(46, 42, 36, 0.22);
+  --edge:      0 1px 0 rgba(46, 42, 36, 0.10);
+
+  /* 字号：全站六档 */
+  --t-xs: 12px;
+  --t-sm: 14px;
+  --t-md: 16px;
+  --t-lg: 20px;
+  --t-xl: 28px;
+  --t-2xl: 38px;
+
+  /* 动效：一条曲线、一个时长。不再有回弹过冲。 */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur: 0.26s;
+  --dur-fast: 0.14s;
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 html, body {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: radial-gradient(1200px 700px at 50% 30%, #1e3a5f, #0f172a);
-  font-family: "Segoe UI", "Microsoft YaHei", system-ui, sans-serif;
+  background: var(--mount);
+  color: var(--paper);
+  font-family: var(--font-body);
+  font-size: var(--t-md);
   user-select: none;
   -webkit-user-select: none;
+  overscroll-behavior: none;
+  touch-action: none;               /* 禁掉页面滚动 / 下拉刷新 / 双击缩放 */
+}
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
 }
 
 body {
@@ -16,6 +104,7 @@ body {
   justify-content: center;
 }
 
+/* ---------- 画面 ---------- */
 #stage {
   width: min(100vw, calc(100vh * 16 / 9));
   height: auto;
@@ -24,149 +113,284 @@ body {
 
 #game {
   width: 100%;
-  height: auto;
+  height: auto;                     /* 高度由 canvas 的 16:9 固有比例决定 */
   display: block;
   touch-action: none;
-  border-radius: 12px;
-  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.55);
+  box-shadow: var(--lift);          /* 宣纸裱在暗底上，只有一条投影，没有圆角、没有描边 */
 }
 
-/* 全屏时贴边：去掉圆角与阴影，不留四角的细边 */
+/* 全屏时贴边 */
 body:fullscreen #game,
 body:-webkit-full-screen #game {
-  border-radius: 0;
   box-shadow: none;
 }
 
+/* ---------- 图标 ---------- */
+/* 所有图标共用一套线性参数：1.9 描边、圆头圆角、跟着 currentColor 走 */
+.ico {
+  width: 1em;
+  height: 1em;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -0.135em;
+}
+.ico.solid { fill: currentColor; stroke: none; }
+
 /* ---------- 覆盖层 ---------- */
 @keyframes overlayIn { from { opacity: 0; } to { opacity: 1; } }
+/* 落印 —— 全站的签名动作，就是「纸压下来」这一下：
+   起手略小、略糊，收笔落在实处。刻意不做回弹过冲（控制点 y > 1 那种），
+   过冲是果冻，落印是一次压实。 */
 @keyframes panelIn {
-  0%   { opacity: 0; transform: scale(0.86) translateY(12px); }
-  62%  { opacity: 1; transform: scale(1.03) translateY(0); }
-  100% { opacity: 1; transform: scale(1) translateY(0); }
+  from { opacity: 0; transform: scale(0.96); filter: blur(6px); }
+  to   { opacity: 1; transform: scale(1);    filter: blur(0); }
 }
-@keyframes panelShake {
-  0%, 100% { transform: translateX(0) rotate(0deg); }
-  15% { transform: translateX(-9px) rotate(-1.2deg); }
-  32% { transform: translateX(8px) rotate(1deg); }
-  48% { transform: translateX(-6px) rotate(-0.7deg); }
-  66% { transform: translateX(5px) rotate(0.5deg); }
-  84% { transform: translateX(-2px) rotate(-0.2deg); }
+/* 失败 —— 不是左右晃。晃是「机器在抖」，读起来像故障，不是「你输了」。
+   改成朱砂从纸背洇出来：面板位置一动不动，只有一圈红从边缘化开。
+   挂在 ::after 上而不是面板本身，因为面板的 box-shadow 要留给 --lift。 */
+@keyframes sealBleed {
+  0%   { opacity: 0.55; box-shadow: 0 0 0 0 rgba(178, 58, 46, 0.45); }
+  100% { opacity: 0;    box-shadow: 0 0 0 18px rgba(178, 58, 46, 0); }
 }
+/* 星 —— 落印的小号版本，同样不过冲 */
 @keyframes starPop {
-  0%   { opacity: 0; transform: scale(0.2) rotate(-45deg); }
-  60%  { opacity: 1; transform: scale(1.55) rotate(10deg); }
-  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+  from { opacity: 0; transform: scale(0.96); }
+  to   { opacity: 1; transform: scale(1); }
 }
 
 .overlay {
   position: fixed;
   inset: 0;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--s5) var(--s4);
+  overflow-y: auto;
+  background: var(--scrim);
+  animation: overlayIn 0.2s var(--ease) both;
+  touch-action: pan-y;              /* body 上是 none，这里单独放开，弹窗高了才能滚 */
+}
+.overlay.hidden { display: none; }
+/* 用 margin:auto 而不是 justify-content 居中：内容超高时不会把顶部裁掉 */
+.overlay > * { margin: auto; }
+
+/* ---------- 宣纸面板 ---------- */
+.panel {
+  position: relative;
+  width: 100%;
+  max-width: 460px;
+  padding: var(--s6) var(--s6) var(--s5);
+  text-align: center;
+  background: var(--paper);
+  border-radius: var(--r-panel);
+  box-shadow: var(--lift);
+  animation: panelIn var(--dur) var(--ease) both;
+}
+/* 角印：一方案朱砂印压在面板左上角，全站唯一的「钤印」记号。
+   上一版是 11px 实心方块、方方正正缩在角里 —— 渲染出来不像印章，
+   像一个没摆正的元素（1440×900 的过关面板上尤其明显）。
+   真正的印有两件事：一个反白的字，和一点点歪。 */
+.panel::before {
+  content: "墨";
+  position: absolute;
+  top: var(--s4);
+  left: var(--s4);
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  font-family: var(--font-title);
+  font-size: 17px;
+  line-height: 1;
+  color: var(--paper);
+  background: var(--seal);
+  border-radius: 2px;
+  transform: rotate(-4deg);
+  pointer-events: none;
+  user-select: none;
+}
+
+.panel .title {
+  font-family: var(--font-display);
+  font-size: var(--t-2xl);
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--ink);
+  margin-bottom: var(--s3);
+}
+.panel .sub {
+  font-size: var(--t-md);
+  line-height: 1.7;
+  color: var(--ink-2);
+  margin: var(--s1) 0;
+}
+.panel .hint {
+  font-size: var(--t-sm);
+  color: var(--ink-3);
+  margin: var(--s3) 0 var(--s5);
+}
+
+/* 失败弹窗：落印之后朱砂从纸背洇一圈。位置不动。 */
+.panel::after {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity: 0;
+}
+.overlay.shake .panel::after {
+  animation: sealBleed 0.52s 0.24s var(--ease) both;
+}
+
+/* ---------- 星级 ---------- */
+.stars {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(15, 23, 42, 0.55);
-  z-index: 20;
-  animation: overlayIn 0.22s ease-out both;
+  gap: var(--s2);
+  margin: var(--s3) 0 var(--s4);
 }
-.overlay.hidden { display: none; }
+/* 星星是 <svg>，不是「★」这个字符：字符在不同系统上会被 emoji 字体截走，
+   而且没法只填一半。fill/stroke 必须直接落在 svg 上，靠 span 继承会被 .ico 的
+   fill:none 顶掉（.ico 直接命中 svg，继承值赢不了）。 */
+.stars .ico { width: 40px; height: 40px; }
+.stars .on  .ico { fill: var(--seal); stroke: var(--seal); }
+/* 未点亮的星：空心 + 淡墨。它是「没拿到」，不是「看不见」—— 对纸面 5.46:1 */
+.stars .off .ico { fill: none; stroke: var(--ink-3); stroke-width: 1.5; }
+.stars .pop { animation: starPop 0.3s var(--ease) both; }
 
-.panel {
-  background: #fff;
-  border-radius: 18px;
-  padding: 34px 42px;
-  text-align: center;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-  max-width: 92vw;
-  animation: panelIn 0.30s cubic-bezier(0.2, 1.5, 0.45, 1) both;
+/* ---------- 按钮 ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--s2);
+  font-family: var(--font-body);
+  font-size: var(--t-lg);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--paper);
+  background: var(--seal);
+  border: none;
+  border-radius: var(--r-chip);
+  padding: var(--s3) var(--s5);
+  margin: var(--s1) var(--s1) 0;
+  cursor: pointer;
+  transition: background var(--dur-fast) var(--ease), transform 0.08s var(--ease);
 }
-/* 失败弹窗：弹入之后再懊恼地晃两下 */
-.overlay.shake .panel {
-  animation: panelIn 0.30s cubic-bezier(0.2, 1.5, 0.45, 1) both,
-             panelShake 0.55s 0.30s ease-in-out both;
+.btn:hover  { background: var(--seal-deep); }
+.btn:active { transform: translateY(1px); }
+.btn.small  { font-size: var(--t-md); padding: var(--s2) var(--s4); }
+.btn .ico { width: 1.05em; height: 1.05em; }
+/* 主按钮独占一行：它是这一屏唯一的动词，不该和两个次要动作挤在同一行 */
+.panel .btn:not(.small) {
+  display: flex;
+  width: 100%;
+  max-width: 260px;
+  margin: var(--s5) auto var(--s4);
 }
-.panel .title { font-size: 34px; font-weight: 800; color: #1f2937; margin-bottom: 14px; }
-.panel .sub { font-size: 16px; color: #4b5563; margin: 6px 0; }
-.panel .hint { font-size: 14px; color: #9ca3af; margin: 12px 0 22px; }
 
-.stars { font-size: 44px; line-height: 1; margin: 10px 0 16px; letter-spacing: 6px; }
-.stars span { display: inline-block; }
-.stars .pop { animation: starPop 0.34s cubic-bezier(0.2, 1.6, 0.5, 1) both; }
-.stars .on { color: #f59e0b; text-shadow: 0 2px 6px rgba(245, 158, 11, 0.5); }
-.stars .off { color: #e5e7eb; }
+/* 幽灵按钮：不要底色、不要边框，只有墨字 —— 一眼就知道是次要动作 */
+.btn.ghost {
+  background: transparent;
+  color: var(--ink-2);
+  font-weight: 600;
+  padding: var(--s2) var(--s3);
+}
+.btn.ghost:hover  { background: rgba(47, 42, 34, 0.07); }
+.btn.ghost:active { transform: none; }
 
 /* ---------- 选关 ---------- */
-.panel.wide { max-width: min(92vw, 560px); }
+.panel.wide { max-width: min(94vw, 620px); }
 
 .level-list {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin: 4px 0 18px;
+  gap: var(--s2);
+  margin: var(--s3) 0 var(--s5);
 }
 
+/* 卡片不是「白底 + 1px 方框」，是一格界画：左侧一道界格线定开合。
+   三列：编号 | 名称+副信息 | 状态（星/锁）。状态挪到右端、
+   纵向居中跨满整张卡 —— 原来它跟副信息一起堆在左下角，
+   620px 的面板里每张卡右半边空着 120px，读起来像没排完版。 */
 .lvcard {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 12px 14px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: baseline;
+  gap: 2px var(--s3);
+  padding: var(--s3) var(--s4);
   text-align: left;
   font-family: inherit;
-  border: 1.5px solid rgba(47, 42, 34, 0.16);
-  border-radius: 12px;
-  background: rgba(253, 248, 239, 0.92);
-  cursor: pointer;
-  transition: transform 0.12s ease, border-color 0.12s ease, box-shadow 0.12s ease;
-}
-.lvcard:hover:not(.locked) {
-  transform: translateY(-2px);
-  border-color: rgba(192, 57, 43, 0.5);
-  box-shadow: 0 6px 16px rgba(47, 42, 34, 0.14);
-}
-.lvcard:active:not(.locked) { transform: translateY(1px); }
-.lvcard .lvno { font-size: 12.5px; font-weight: 700; color: #8a7f6b; }
-.lvcard .lvname { font-size: 17px; font-weight: 700; color: #2f2a22; }
-.lvcard .lvmeta { font-size: 12.5px; color: #6b6353; }
-.lvcard .lvstar { font-size: 13.5px; color: #c0392b; letter-spacing: 1px; }
-.lvcard.locked {
-  cursor: not-allowed;
-  opacity: 0.55;
-  background: rgba(240, 235, 224, 0.8);
-}
-.lvcard.locked .lvname { color: #8a7f6b; }
-.lvcard.locked .lvstar { color: #8a7f6b; }
-
-@media (hover: none) and (pointer: coarse) {
-  .level-list { gap: 8px; margin: 4px 0 14px; }
-  .lvcard { padding: 11px 12px; }
-  .lvcard .lvname { font-size: 16px; }
-  .lvcard .lvmeta { font-size: 12px; }
-}
-
-.btn {
   border: none;
+  border-left: 3px solid var(--jade);
+  border-radius: var(--r-card);
+  background: var(--paper-2);
   cursor: pointer;
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
-  background: linear-gradient(180deg, #fbbf24, #f59e0b);
-  padding: 12px 34px;
-  border-radius: 999px;
-  box-shadow: 0 6px 0 #b45309;
-  transition: transform 0.06s;
+  transition: background var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
 }
-.btn:hover { transform: translateY(-2px); }
-.btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #b45309; }
-.btn.small { font-size: 15px; padding: 9px 26px; }
+.lvcard:hover:not(.locked) { background: var(--paper-3); border-left-color: var(--seal); }
+.lvcard:active:not(.locked) { transform: translateY(1px); }
 
-.btn.ghost {
-  background: transparent;
-  color: #6b7280;
-  box-shadow: none;
-  margin-top: 10px;
+.lvcard .lvno {
+  font-size: var(--t-xs);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--ink-3);
 }
-.btn.ghost:hover { color: #374151; transform: none; }
-.btn.ghost:active { box-shadow: none; transform: none; }
+.lvcard .lvname {
+  font-family: var(--font-display);
+  font-size: var(--t-lg);
+  font-weight: 700;
+  color: var(--ink);
+}
+.lvcard .lvmeta {
+  grid-column: 1 / 3;
+  font-size: var(--t-xs);
+  color: var(--ink-3);
+}
+.lvcard .lvstar {
+  grid-column: 3;
+  grid-row: 1 / -1;
+  align-self: center;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--s1);
+  font-size: var(--t-sm);
+  color: var(--seal);
+}
+.lvcard .lvstar .ico { width: 1.05em; height: 1.05em; }
+/* 拿到手的星是实心朱砂，没拿到的是淡墨空心。
+   空心星用 --ink-3 而不是 --ink-4：ink-4 对这张卡的纸面只有 2.98:1，
+   而星星是有意义的图形（WCAG 1.4.11 要求 ≥3:1），不是装饰。
+   ink-4 从这条起只许画分隔线。 */
+.lvcard .lvstar .st .ico    { fill: none; stroke: var(--ink-3); stroke-width: 1.6; }
+.lvcard .lvstar .st.on .ico { fill: var(--seal); stroke: var(--seal); }
+
+/* 未解锁：界格线改成虚线、纸面压暗一档、状态行挂一把锁。
+   三重信号里没有一条是「把字调淡」—— 原来那套 3.43:1 的灰字就是为了表达
+   「锁着」才写出来的，代价是根本看不清。 */
+.lvcard.locked {
+  background: var(--paper-3);
+  border-left-style: dashed;
+  border-left-color: var(--ink-4);
+  cursor: not-allowed;
+}
+.lvcard.locked .lvname { color: var(--ink-2); }
+.lvcard.locked .lvstar { color: var(--ink-3); }
+/* 卡片底色压暗一档之后，小字必须跟着提一档：
+   --ink-3 落在 --paper-3 上只有 4.37:1（落在 --paper-2 上是 4.92:1），
+   差这一点点就不过 AA。这行不是为好看，是为了不欠债。 */
+.lvcard.locked .lvno,
+.lvcard.locked .lvmeta { color: var(--ink-2); }
 
 /* ---------- 视频小窗 ---------- */
 .popup {
@@ -175,37 +399,47 @@ body:-webkit-full-screen #game {
   left: 50%;
   transform: translate(-50%, -50%);
   width: min(420px, 92vw);
-  background: #0b1020;
-  border-radius: 16px;
+  background: var(--mount-2);
+  border-radius: var(--r-card);
   overflow: hidden;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.65);
+  box-shadow: var(--lift);
   z-index: 30;
 }
 .popup-title {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 12px;
-  font-size: 17px;
-  font-weight: 800;
-  color: #fde68a;
-  background: linear-gradient(180deg, #1e293b, #0f172a);
+  gap: var(--s2);
+  padding: var(--s3);
+  font-family: var(--font-display);
+  font-size: var(--t-lg);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--paper);
+  background: var(--mount-2);
+  border-bottom: 1px solid rgba(250, 245, 232, 0.14);
   cursor: move;
+  touch-action: none;
   user-select: none;
 }
 .popup-close {
   position: absolute;
-  top: 6px;
-  right: 10px;
+  top: var(--s2);
+  right: var(--s2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
   border: none;
+  border-radius: var(--r-chip);
   background: transparent;
-  color: #cbd5e1;
-  font-size: 18px;
+  color: var(--paper);
+  font-size: var(--t-md);
   cursor: pointer;
-  padding: 4px 8px;
   z-index: 2;
 }
-.popup-close:hover { color: #fff; }
+.popup-close:hover { background: rgba(250, 245, 232, 0.12); }
 
 .video-wrap { position: relative; }
 #winVideo { display: block; width: 100%; max-height: 56vh; background: #000; }
@@ -215,72 +449,87 @@ body:-webkit-full-screen #game {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.45);
-  color: #fff;
-  font-size: 18px;
+  gap: var(--s2);
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--paper);
+  font-size: var(--t-lg);
   font-weight: 700;
   cursor: pointer;
 }
 #playHint.hidden { display: none; }
 
-.popup-actions { padding: 10px; text-align: center; background: #0b1020; }
+.popup-actions { padding: var(--s3); text-align: center; background: var(--mount-2); }
 
-/* ================= 手机 / 触屏适配 ================= */
-/* 禁掉页面滚动、下拉刷新、双击缩放；长按不弹系统菜单 */
-html, body {
-  overscroll-behavior: none;
-  touch-action: none;
-}
-* {
-  -webkit-tap-highlight-color: transparent;
-  -webkit-touch-callout: none;
-}
 .hidden { display: none !important; }
 
-/* 触屏按钮条与竖屏提示：默认都不显示，由下面的媒体查询放出来 */
+/* ==================== 触屏适配 ==================== */
+/* 按钮条默认不显示：桌面端画布右上角那四枚芯片就够了，触屏上芯片太小点不中 */
 #touchBar { display: none; }
 #rotateOverlay { display: none; }
 #pvInfo { display: none; }
 
+/* 触屏按钮：按钮条落在画布外面的装裱底上（深色），所以这里要反过来 ——
+   纸色的块、墨色的图标。原来那套「半透明深底 + 1px 米白亮边」在近黑的底上
+   只是一层灰雾，那条 1px 亮边也正是让界面显廉价的那一笔。 */
+.tbtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: var(--r-chip);
+  background: var(--paper);
+  color: var(--ink);
+  font-size: var(--t-lg);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+  transition: background var(--dur-fast) var(--ease), transform 0.08s var(--ease);
+}
+.tbtn .ico { width: 24px; height: 24px; }
+.tbtn:active { background: var(--paper-3); transform: scale(0.96); }
+
 @media (hover: none) and (pointer: coarse) {
-  /* 手机/平板上用页面按钮条替代画布右上角那三个小芯片（每个 46×46，够手指点） */
+  /* 按钮条：全触屏只有这一处定义 —— 尺寸、锚点、排布都定死在这儿，
+     竖屏提示态和竖屏游玩态不再各写一套（原来同一个按钮条在两种状态下
+     位置从右上跳到下方、尺寸从 46 变成 56，同一个设备上会「跳」一下）。 */
   #touchBar {
     display: flex;
-    gap: 10px;
     position: fixed;
-    top: 10px;
-    right: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: max(var(--s4), env(safe-area-inset-bottom));
+    gap: var(--s4);
     z-index: 15;
   }
-  .tbtn {
-    width: 46px;
-    height: 46px;
-    padding: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 1.5px solid rgba(253, 248, 239, 0.35);
-    border-radius: 12px;
-    background: rgba(47, 42, 34, 0.5);
-    color: #fdf8ef;
-    font-size: 22px;
-    line-height: 1;
-    cursor: pointer;
-    touch-action: manipulation;
-    -webkit-user-select: none;
-    user-select: none;
-  }
-  .tbtn:active { background: rgba(47, 42, 34, 0.72); transform: scale(0.94); }
+  .tbtn { width: 56px; height: 56px; }
 
-  /* 手机横屏普遍只有 350~420 CSS px 高，弹窗整体收紧一点 */
-  .panel { padding: 22px 26px; max-width: 90vw; }
-  .panel .title { font-size: 28px; margin-bottom: 10px; }
-  .panel .sub { font-size: 14px; margin: 5px 0; }
-  .panel .hint { font-size: 12px; margin: 10px 0 14px; }
-  .stars { font-size: 38px; margin: 8px 0 12px; }
-  .btn { font-size: 17px; padding: 12px 28px; }
-  .btn.small { font-size: 14px; padding: 9px 18px; }
-  .btn, .popup-close, .tbtn { touch-action: manipulation; }
+  /* 手机横屏通常只有 350~420 CSS px 高，弹窗整体收紧 */
+  .panel {
+    max-width: min(94vw, 420px);
+    padding: var(--s5) var(--s5) var(--s4);
+  }
+  .panel .title { font-size: var(--t-xl); margin-bottom: var(--s2); }
+  .panel .sub { font-size: var(--t-sm); line-height: 1.6; }
+  .panel .hint { font-size: var(--t-xs); margin: var(--s2) 0 var(--s4); }
+  .stars .ico { width: 32px; height: 32px; }
+  .btn { font-size: var(--t-md); padding: var(--s3) var(--s5); }
+  .btn.small { font-size: var(--t-sm); }
+  .lvcard .lvname { font-size: var(--t-md); }
+}
+
+/* 横屏触屏：画布是 16:9 的，横屏手机上它正好铺满一屏，按钮条没有地方放。
+   与其压在画面上（原来 844×390 下按钮条和画布重叠 148.7px、还越出右边界 65.3px），
+   不如在画布下面留出 56px 的一行 —— 世界一点不少，只是整体小一号。 */
+@media (hover: none) and (pointer: coarse) and (orientation: landscape) {
+  body { flex-direction: column; }
+  #stage { width: min(100vw, calc((100vh - 72px) * 16 / 9)); }
+  #touchBar {
+    position: static;
+    transform: none;
+    bottom: auto;
+    margin-top: var(--s3);
+  }
 }
 
 /* 竖屏（触屏）：盖一层提示，请玩家把手机横过来 —— 16:9 的游戏横屏才有操作空间 */
@@ -293,64 +542,113 @@ html, body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 16px;
-    padding: 24px;
+    gap: var(--s4);
+    padding: var(--s5);
+    overflow-y: auto;
     text-align: center;
-    background: radial-gradient(1200px 700px at 50% 30%, #1e3a5f, #0f172a);
-    color: #fdf8ef;
+    background: var(--mount);
+    color: var(--paper);
   }
-  .rot-icon { font-size: 64px; animation: rotHint 1.8s ease-in-out infinite; }
-  .rot-text { font-size: 22px; font-weight: 700; letter-spacing: 1px; }
-  .rot-sub { font-size: 14px; color: #94a3b8; line-height: 1.6; max-width: 20em; }
+  .rot-icon { color: var(--paper); animation: rotHint 1.8s ease-in-out infinite; }
+  .rot-icon .ico { width: 64px; height: 64px; stroke-width: 1.5; }
+  .rot-text {
+    font-family: var(--font-display);
+    font-size: var(--t-xl);
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+  .rot-sub {
+    font-size: var(--t-sm);
+    line-height: 1.7;
+    color: rgba(250, 245, 232, 0.68);   /* 对装裱底 8.2:1，不再是那支偏冷的蓝灰 */
+    max-width: 20em;
+  }
   .rot-play {
-    margin-top: 8px;
-    padding: 12px 26px;
-    border: 1.5px solid rgba(253, 248, 239, 0.4);
-    border-radius: 999px;
-    background: rgba(253, 248, 239, 0.12);
-    color: #fdf8ef;
-    font-size: 16px;
+    margin-top: var(--s2);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s2);
+    padding: var(--s3) var(--s5);
+    border: none;
+    border-radius: var(--r-chip);
+    background: rgba(250, 245, 232, 0.14);
+    color: var(--paper);
+    font-family: var(--font-body);
+    font-size: var(--t-md);
     font-weight: 700;
     cursor: pointer;
     touch-action: manipulation;
   }
-  .rot-play:active { background: rgba(253, 248, 239, 0.26); }
+  .rot-play:active { background: rgba(250, 245, 232, 0.28); }
 
   /* ---------- 竖屏游玩模式（点了「仍要竖屏玩」）---------- */
   body.pv #rotateOverlay { display: none; }
-  body.pv { align-items: flex-start; }          /* 画面贴顶，不再垂直居中 */
-  body.pv #stage { width: 100vw; }              /* 铺满宽度：390×844 的手机上得到 390×219 的画面 */
-  body.pv #game { border-radius: 0; box-shadow: none; }
+  body.pv { align-items: flex-start; }   /* 画面贴顶，不再垂直居中 */
+  body.pv #stage { width: 100vw; }       /* 铺满宽度：390×844 的手机上得到 390×219 的画面 */
+  body.pv #game { box-shadow: none; }
 
-  /* 画面下方那一大块留白变成操作区：一条信息条 + 一排大按钮 */
+  /* 画面下方那一大块留白变成操作区：一条信息条 + 底部那排按钮。
+     信息条是「一张纸」压在装裱底上，不是一块玻璃 —— 原来是半透明底 + 1px 亮边，
+     在深底上既不像按钮也不像卡片。 */
   body.pv #pvInfo {
     display: inline-block;
     position: fixed;
-    top: calc(100vw * 9 / 16 + 14px);
+    top: calc(100vw * 9 / 16 + var(--s3));
     left: 50%;
     transform: translateX(-50%);
-    padding: 10px 18px;
-    border-radius: 12px;
-    background: rgba(253, 248, 239, 0.1);
-    border: 1px solid rgba(253, 248, 239, 0.22);
-    color: #fdf8ef;
-    font-size: 17px;
+    padding: 10px var(--s4);
+    border-radius: var(--r-chip);
+    background: var(--paper);
+    color: var(--ink);
+    box-shadow: var(--lift-soft);
+    font-size: var(--t-md);
     font-weight: 700;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.06em;
     white-space: nowrap;
     z-index: 15;
   }
-  body.pv #touchBar {
-    top: auto;
-    right: auto;
-    bottom: max(18px, env(safe-area-inset-bottom));
-    left: 50%;
-    transform: translateX(-50%);
-    gap: 16px;
+  /* 竖屏游玩时弹窗从信息条下面开始排。
+     原来弹窗是「整个视口垂直居中」，344 高的面板居中后顶边落在 263px，
+     而信息条占到 277px —— 两层叠了 14.4px，图上就是信息条被面板拦腰截断。
+     现在弹窗改为顶部对齐、并且从信息条下面起算，两者永远不相交。 */
+  body.pv .overlay {
+    align-items: flex-start;
+    padding-top: calc(100vw * 9 / 16 + 82px);
   }
-  body.pv .tbtn { width: 56px; height: 56px; font-size: 26px; border-radius: 14px; }
+  body.pv .overlay > * { margin: 0 auto; }
 }
+
 @keyframes rotHint {
   0%, 35% { transform: rotate(0deg); }
   65%, 100% { transform: rotate(90deg); }
+}
+
+/* ---------------------------------------------------------------------------
+ * 焦点可见 + 减弱动态
+ * 改这段之前先想清楚：这是全站唯一允许「加描边」的地方。
+ * ------------------------------------------------------------------------- */
+
+/* 键盘走到哪必须看得见。原来全站一条 :focus-visible 都没有，
+   Tab 走一圈屏幕上没有任何反馈 —— 键盘用户等于在盲操作。
+   焦点环是唯一该破坏「无描边」这条规矩的东西：它必须比周围任何元素都显眼。 */
+:focus-visible {
+  outline: 2px solid var(--seal);
+  outline-offset: 2px;
+}
+/* 鼠标点出来的焦点不画环，否则每个按钮点完都留一圈红。
+   用 :focus:not(:focus-visible) 而不是只写 :focus-visible —— 后者管不住浏览器默认环。 */
+:focus:not(:focus-visible) { outline: none; }
+
+/* 系统开了「减弱动态效果」就把动效全停。
+   这里不是把时长压到 0.001s —— 那样 transitionend / animationend 还会照常触发，
+   依赖动画结束的回调会照跑一遍。直接 none，状态切换变成瞬时的，功能不受影响。 */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  /* 落印的起手带 filter: blur(6px)。动画停掉以后如果 fill 还停在第一帧，
+     面板会永远糊着 —— 所以单独把 filter 也清掉。 */
+  .panel { filter: none !important; }
+  .overlay.shake .panel::after { opacity: 0 !important; }
 }

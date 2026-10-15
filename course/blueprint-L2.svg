@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" width="960" height="540" font-family="'Microsoft YaHei','PingFang SC','Segoe UI',system-ui,sans-serif">
+<title>第 2 关 第 2 关 · 叠叠高 平面图</title>
+<rect width="960" height="540" fill="#faf5e8"/>
+<g stroke="#e8dcc3" stroke-width="0.7">
+<line x1="88" y1="96" x2="88" y2="540"/>
+<line x1="176" y1="96" x2="176" y2="540"/>
+<line x1="264" y1="96" x2="264" y2="540"/>
+<line x1="352" y1="96" x2="352" y2="540"/>
+<line x1="440" y1="96" x2="440" y2="540"/>
+<line x1="528" y1="96" x2="528" y2="540"/>
+<line x1="616" y1="96" x2="616" y2="540"/>
+<line x1="704" y1="96" x2="704" y2="540"/>
+<line x1="792" y1="96" x2="792" y2="540"/>
+<line x1="880" y1="96" x2="880" y2="540"/>
+<line x1="0" y1="184" x2="960" y2="184"/>
+<line x1="0" y1="272" x2="960" y2="272"/>
+<line x1="0" y1="360" x2="960" y2="360"/>
+<line x1="0" y1="448" x2="960" y2="448"/>
+<line x1="0" y1="536" x2="960" y2="536"/>
+</g>
+<rect x="-10" y="470" width="320" height="120" rx="5" fill="#93ad76" fill-opacity="0.45" stroke="#3f5f52" stroke-width="1.8" stroke-dasharray="9 4"/>
+<text x="150" y="489" font-size="12.5" fill="#3f5f52" text-anchor="middle">发射台（固定）</text>
+<text x="150" y="583" font-size="10.5" fill="#6b6353" text-anchor="middle">cx 150 · top 470 · 320×120</text>
+<rect x="500" y="440" width="200" height="100" rx="5" fill="#7a9c80" fill-opacity="0.45" stroke="#3f5f52" stroke-width="1.4"/>
+<text x="600" y="459" font-size="12.5" fill="#3f5f52" text-anchor="middle">岛1</text>
+<text x="600" y="533" font-size="10.5" fill="#6b6353" text-anchor="middle">cx 600 · top 440 · 200×100</text>
+<rect x="785" y="300" width="170" height="110" rx="5" fill="#7a9c80" fill-opacity="0.45" stroke="#3f5f52" stroke-width="1.4"/>
+<text x="870" y="319" font-size="12.5" fill="#3f5f52" text-anchor="middle">岛2</text>
+<text x="870" y="403" font-size="10.5" fill="#6b6353" text-anchor="middle">cx 870 · top 300 · 170×110</text>
+<g stroke="#4a4438" stroke-width="2.4" stroke-linecap="round" fill="none">
+<line x1="152" y1="360" x2="174" y2="330"/>
+<line x1="218" y1="360" x2="196" y2="330"/>
+</g>
+<circle cx="185" cy="384" r="13" fill="#f6c044" stroke="#4a4438" stroke-width="1.2"/>
+<text x="185" y="416" font-size="10.5" fill="#6b6353" text-anchor="middle">奶龙·待发</text>
+<g fill="none" stroke="#b23a2e" stroke-width="1.8" stroke-dasharray="7 5" stroke-linecap="round" opacity="0.9">
+<polyline points="149,395 157.9,386.6 166.8,378.5 175.6,370.8 184.3,363.5 192.9,356.4 201.5,349.7 210,343.3 218.5,337.3 226.8,331.6 235.1,326.2 243.4,321.1 251.5,316.3 259.7,311.9 267.7,307.8 275.7,304 283.6,300.5 291.4,297.3 299.2,294.4 307,291.8 314.6,289.5 322.2,287.5 329.8,285.8 337.2,284.3 344.7,283.2 352,282.4 359.3,281.8 366.6,281.5 373.8,281.5 380.9,281.9 388,282.6 395,283.7 401.9,285.1 408.9,286.9 415.7,289.1 422.5,291.5 429.2,294.3 435.9,297.5 442.6,301 449.1,304.8 455.7,309 462.1,313.4 468.6,318.2 474.9,323.4 481.2,328.8 487.5,334.6 493.7,340.7 499.9,347.1 506,353.8 512.1,360.8 518.1,368.1 524.1,375.7"/>
+<polyline points="144,431 154.2,413.7 164.3,396.8 174.3,380.3 184.2,364.2 194,348.5 203.8,333.2 213.5,318.3 223.1,303.8 232.6,289.7 242.1,276 251.5,262.7 260.8,249.8 270,237.3 279.2,225.1 288.3,213.3 297.3,201.9 306.2,190.8 315.1,180.1 323.9,169.8 332.6,159.8 341.3,150.2 349.9,141 358.4,132.1 366.8,123.5 375.2,115.3 383.5,107.5"/>
+<polyline points="713.5,104.8 719.1,112.6 724.7,120.6 730.2,129 735.7,137.6 741.1,146.6 746.5,155.8 751.9,165.3 757.2,175.1 762.4,185.2 767.7,195.5 772.8,206.2 778,217.1 783.1,228.3 788.1,239.7 793.2,251.4 798.1,263.4"/>
+</g>
+<path d="M 383.5 107.5 Q 548.5 80 713.5 104.8" fill="none" stroke="#b23a2e" stroke-width="1.1" stroke-dasharray="2 4" opacity="0.55"/>
+<text x="548.5" y="92" font-size="9.5" fill="#b23a2e" text-anchor="middle" opacity="0.85">出画（顶点 y=15）</text>
+<g font-size="10.5" fill="#b23a2e">
+<circle cx="524.1" cy="375.7" r="8.5" fill="#faf5e8" stroke="#b23a2e" stroke-width="1.5"/>
+<text x="524.1" y="379.5" text-anchor="middle" font-size="11">1</text>
+<circle cx="798.1" cy="263.4" r="8.5" fill="#faf5e8" stroke="#b23a2e" stroke-width="1.5"/>
+<text x="798.1" y="267.2" text-anchor="middle" font-size="11">2</text>
+</g>
+<rect x="498" y="396" width="44" height="44" rx="2" fill="#c29a6b" stroke="#9a7048" stroke-width="1.3"/>
+<rect x="500.5" y="398.5" width="39" height="39" rx="1" fill="none" stroke="#9a7048" stroke-width="0.6" opacity="0.55"/>
+<text x="520" y="422" font-size="12" fill="#2f2a22" text-anchor="middle">0</text>
+<rect x="570" y="380" width="60" height="60" rx="2" fill="#c29a6b" stroke="#9a7048" stroke-width="1.3"/>
+<rect x="572.5" y="382.5" width="55" height="55" rx="1" fill="none" stroke="#9a7048" stroke-width="0.6" opacity="0.55"/>
+<text x="600" y="414" font-size="12" fill="#2f2a22" text-anchor="middle">1</text>
+<rect x="566.5" y="376.5" width="67" height="67" rx="3" fill="none" stroke="#b23a2e" stroke-width="1.8" stroke-dasharray="5 3"/>
+<text x="636" y="379" font-size="12" fill="#b23a2e">护</text>
+<rect x="578" y="336" width="44" height="44" rx="2" fill="#c29a6b" stroke="#9a7048" stroke-width="1.3"/>
+<rect x="580.5" y="338.5" width="39" height="39" rx="1" fill="none" stroke="#9a7048" stroke-width="0.6" opacity="0.55"/>
+<text x="600" y="362" font-size="12" fill="#2f2a22" text-anchor="middle">2</text>
+<rect x="578" y="292" width="44" height="44" rx="2" fill="#c29a6b" stroke="#9a7048" stroke-width="1.3"/>
+<rect x="580.5" y="294.5" width="39" height="39" rx="1" fill="none" stroke="#9a7048" stroke-width="0.6" opacity="0.55"/>
+<text x="600" y="318" font-size="12" fill="#2f2a22" text-anchor="middle">3</text>
+<rect x="578" y="248" width="44" height="44" rx="2" fill="#c29a6b" stroke="#9a7048" stroke-width="1.3"/>
+<rect x="580.5" y="250.5" width="39" height="39" rx="1" fill="none" stroke="#9a7048" stroke-width="0.6" opacity="0.55"/>
+<text x="600" y="274" font-size="12" fill="#2f2a22" text-anchor="middle">4</text>
+<rect x="578" y="204" width="44" height="44" rx="2" fill="#c29a6b" stroke="#9a7048" stroke-width="1.3"/>
+<rect x="580.5" y="206.5" width="39" height="39" rx="1" fill="none" stroke="#9a7048" stroke-width="0.6" opacity="0.55"/>
+<text x="600" y="230" font-size="12" fill="#2f2a22" text-anchor="middle">5</text>
+<rect x="570" y="144" width="60" height="60" rx="2" fill="#c29a6b" stroke="#9a7048" stroke-width="1.3"/>
+<rect x="572.5" y="146.5" width="55" height="55" rx="1" fill="none" stroke="#9a7048" stroke-width="0.6" opacity="0.55"/>
+<text x="600" y="178" font-size="12" fill="#2f2a22" text-anchor="middle">6</text>
+<polygon points="600,156 618,174 600,192 582,174" fill="none" stroke="#b23a2e" stroke-width="1.8"/>
+<text x="636" y="143" font-size="12" fill="#b23a2e">印</text>
+<rect x="820" y="240" width="60" height="60" rx="2" fill="#c29a6b" stroke="#9a7048" stroke-width="1.3"/>
+<rect x="822.5" y="242.5" width="55" height="55" rx="1" fill="none" stroke="#9a7048" stroke-width="0.6" opacity="0.55"/>
+<text x="850" y="274" font-size="12" fill="#2f2a22" text-anchor="middle">7</text>
+<polygon points="850,252 868,270 850,288 832,270" fill="none" stroke="#b23a2e" stroke-width="1.8"/>
+<text x="886" y="239" font-size="12" fill="#b23a2e">印</text>
+<rect x="903" y="256" width="44" height="44" rx="2" fill="#c29a6b" stroke="#9a7048" stroke-width="1.3"/>
+<rect x="905.5" y="258.5" width="39" height="39" rx="1" fill="none" stroke="#9a7048" stroke-width="0.6" opacity="0.55"/>
+<text x="925" y="282" font-size="12" fill="#2f2a22" text-anchor="middle">8</text>
+<rect x="0" y="0" width="960" height="96" fill="#f2e9d6"/>
+<line x1="0" y1="96" x2="960" y2="96" stroke="#6b6353" stroke-width="1"/>
+<text x="22" y="34" font-size="21" font-family="'Source Han Serif SC','Noto Serif SC','Songti SC','STSong',Georgia,serif" fill="#2f2a22">第 2 关 · 叠叠高</text>
+<text x="22" y="56" font-size="12" fill="#4a4438">9 块 · 6 发 · 三星 = 通关时剩 ≥ 2 发（最多用 4 发）</text>
+<text x="22" y="76" font-size="11" fill="#6b6353">图纸 = 世界坐标 1:1（960×540）· 虚线弹道为参考解，非唯一打法</text>
+<g font-size="11" fill="#4a4438">
+<text x="352" y="24" font-size="11" fill="#6b6353">图例</text>
+<rect x="352" y="31" width="20" height="13" fill="#7a9c80" fill-opacity="0.45" stroke="#3f5f52" stroke-width="1.2"/>
+<text x="378" y="42">岛体</text>
+<rect x="352" y="52" width="20" height="13" fill="#c29a6b" stroke="#9a7048" stroke-width="1.2"/>
+<text x="378" y="63">木块（数字 = 下标）</text>
+<rect x="502" y="31" width="20" height="13" fill="none" stroke="#b23a2e" stroke-width="1.6" stroke-dasharray="5 3"/>
+<text x="528" y="42">护心块</text>
+<polygon points="512,60 517,65 512,70 507,65" fill="none" stroke="#b23a2e" stroke-width="1.6"/>
+<text x="528" y="63">落印块</text>
+</g>
+<g font-size="11" fill="#4a4438">
+<text x="700" y="24" font-size="11" fill="#6b6353">离线实测（run-sample.mjs --n 8000）</text>
+<text x="700" y="44">通关率 11.1% · 最少 2 发</text>
+<text x="700" y="63">三星达成率 <tspan fill="#b23a2e" font-size="13">44.2%</tspan>（占通关路线）</text>
+<text x="700" y="82" font-size="10.5" fill="#6b6353">8000 条随机路线仿真（886 条通关）· 未经真人试玩</text>
+</g>
+<rect x="0.5" y="0.5" width="959" height="539" fill="none" stroke="#6b6353" stroke-width="1"/>
+</svg>
