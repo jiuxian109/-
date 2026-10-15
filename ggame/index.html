@@ -17,6 +17,7 @@
   <button id="tbMute" class="tbtn" title="音效开关">🔊</button>
   <button id="tbFull" class="tbtn" title="全屏">⛶</button>
   <button id="tbRestart" class="tbtn" title="重来">↻</button>
+  <button id="tbSelect" class="tbtn" title="选关">☰</button>
 </div>
 
 <!-- 竖屏游玩时的信息条：竖屏画面只有屏幕宽度的 2/5，画布上的字看不清，把信息搬到下面的操作区 -->
@@ -31,6 +32,7 @@
     <div class="sub">把堆叠的木块全部击倒，即可通关！</div>
     <div class="hint">共 4 关 · 关卡递进 · 评分星级</div>
     <button id="startBtn" class="btn">▶ 开始游戏</button>
+    <button id="selectBtn" class="btn small ghost">☰ 选关</button>
     <button id="fsBtn" class="btn small ghost">⛶ 全屏</button>
   </div>
 </div>
@@ -54,6 +56,16 @@
     <div class="title">😢 差一点</div>
     <div class="sub">木块没有全部击倒</div>
     <button id="retryBtn" class="btn">🔄 再来一次</button>
+  </div>
+</div>
+
+<!-- 选关界面 -->
+<div id="selectOverlay" class="overlay hidden">
+  <div class="panel wide">
+    <div class="title">选择关卡</div>
+    <div class="hint">通关一关才会解锁下一关</div>
+    <div id="levelList" class="level-list"></div>
+    <button id="selectClose" class="btn small ghost">✕ 返回</button>
   </div>
 </div>
 
@@ -81,6 +93,8 @@
 </div>
 
 <script src="lib/matter.min.js"></script>
+<!-- 关卡数据（纯数据，改木块摆放只动这个文件；必须排在 game.js 前面） -->
+<script src="levels.js"></script>
 <script src="game.js"></script>
 </body>
 </html>

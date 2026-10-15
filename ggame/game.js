@@ -40,6 +40,7 @@
   const RESTART_RECT = { x: WORLD_W - 150, y: 50, w: 140, h: 34 };
   const MUTE_RECT = { x: WORLD_W - 198, y: 12, w: 40, h: 34 };
   const FULLSCREEN_RECT = { x: WORLD_W - 246, y: 12, w: 40, h: 34 };
+  const SELECT_RECT = { x: WORLD_W - 324, y: 12, w: 70, h: 34 };
 
   // ---------- 触屏适配 ----------
   // 触屏（手机/平板）走另一套 UI：画布右上角的三个小芯片换成页面上的大按钮条，
@@ -196,93 +197,16 @@
   function sReturn() { pluck(220, 110, 0.16, 0.07); }
 
   // ---------- 关卡定义 ----------
-  // islands: 浮空岛（静态），blocks 坐标即其中心（木块中心）。
-  // 浮空岛不再固定贴底，分布在不同高度，木块随之抬升到中上部。
-  const LEVELS = [
-    {
-      name: '第 1 关 · 云间初试',
-      birds: 3,
-      islands: [
-        { cx: 150, top: 470, w: 320, h: 120 },
-        { cx: 640, top: 390, w: 300, h: 100 }
-      ],
-      blocks: [
-        { x: 596, y: 368, w: 44, h: 44 },
-        { x: 640, y: 368, w: 44, h: 44 },
-        { x: 684, y: 368, w: 44, h: 44 },
-        { x: 618, y: 324, w: 44, h: 44 },
-        { x: 662, y: 324, w: 44, h: 44 },
-        { x: 640, y: 280, w: 44, h: 44 }
-      ]
-    },
-    {
-      name: '第 2 关 · 叠叠高',
-      birds: 3,
-      islands: [
-        { cx: 150, top: 470, w: 320, h: 120 },
-        { cx: 560, top: 440, w: 260, h: 100 },
-        { cx: 880, top: 300, w: 180, h: 100 }
-      ],
-      blocks: [
-        { x: 516, y: 418, w: 44, h: 44 },
-        { x: 560, y: 418, w: 44, h: 44 },
-        { x: 604, y: 418, w: 44, h: 44 },
-        { x: 538, y: 374, w: 44, h: 44 },
-        { x: 582, y: 374, w: 44, h: 44 },
-        { x: 560, y: 330, w: 44, h: 44 },
-        { x: 838, y: 278, w: 44, h: 44 },
-        { x: 882, y: 278, w: 44, h: 44 },
-        { x: 860, y: 234, w: 44, h: 44 }
-      ]
-    },
-    {
-      name: '第 3 关 · 一柱擎天',
-      birds: 4,
-      islands: [
-        { cx: 150, top: 470, w: 320, h: 120 },
-        { cx: 520, top: 300, w: 300, h: 100 }
-      ],
-      blocks: [
-        { x: 454, y: 278, w: 44, h: 44 },
-        { x: 498, y: 278, w: 44, h: 44 },
-        { x: 542, y: 278, w: 44, h: 44 },
-        { x: 586, y: 278, w: 44, h: 44 },
-        { x: 476, y: 234, w: 44, h: 44 },
-        { x: 520, y: 234, w: 44, h: 44 },
-        { x: 564, y: 234, w: 44, h: 44 },
-        { x: 498, y: 190, w: 44, h: 44 },
-        { x: 542, y: 190, w: 44, h: 44 },
-        { x: 520, y: 146, w: 44, h: 44 }
-      ]
-    },
-    {
-      name: '第 4 关 · 巅峰论道',
-      birds: 5,
-      islands: [
-        { cx: 150, top: 470, w: 320, h: 120 },
-        { cx: 500, top: 280, w: 240, h: 100 },
-        { cx: 880, top: 350, w: 220, h: 100 }
-      ],
-      blocks: [
-        { x: 456, y: 258, w: 44, h: 44 },
-        { x: 500, y: 258, w: 44, h: 44 },
-        { x: 544, y: 258, w: 44, h: 44 },
-        { x: 478, y: 214, w: 44, h: 44 },
-        { x: 522, y: 214, w: 44, h: 44 },
-        { x: 500, y: 170, w: 44, h: 44 },
-        { x: 814, y: 328, w: 44, h: 44 },
-        { x: 858, y: 328, w: 44, h: 44 },
-        { x: 902, y: 328, w: 44, h: 44 },
-        { x: 946, y: 328, w: 44, h: 44 },
-        { x: 836, y: 284, w: 44, h: 44 },
-        { x: 880, y: 284, w: 44, h: 44 },
-        { x: 924, y: 284, w: 44, h: 44 },
-        { x: 858, y: 240, w: 44, h: 44 },
-        { x: 902, y: 240, w: 44, h: 44 },
-        { x: 880, y: 196, w: 44, h: 44 }
-      ]
-    }
-  ];
+  // 数据抽在 levels.js（window.DDD_LEVELS），调木块摆放不用动这个文件。
+  // 坐标规则（木块 x/y 是中心、岛 top 是岛面）见 levels.js 顶部注释。
+  const LEVELS = window.DDD_LEVELS;
+  if (!Array.isArray(LEVELS) || !LEVELS.length) {
+    document.body.innerHTML =
+      '<div style="font:15px/1.8 ui-monospace,Consolas,monospace;color:#c0392b;padding:28px">' +
+      '关卡数据没加载成功。<br>请确认 <b>ggame/levels.js</b> 存在，' +
+      '并且 index.html 里它排在 <b>game.js</b> 之前。</div>';
+    throw new Error('DDD: window.DDD_LEVELS 缺失');
+  }
 
   // ---------- 构建关卡 ----------
   function addIsland(cx, top, w, h) {
@@ -596,6 +520,7 @@
     const p = toCanvas(e);
     // 触屏上这三个芯片不画（改由页面上的按钮条代劳），热区一并关掉
     if (!touchUI && insideRect(p, RESTART_RECT)) { restart(); sClick(); return; }
+    if (!touchUI && insideRect(p, SELECT_RECT)) { if (state === 'ready') openSelect(true); return; }
     if (!touchUI && insideRect(p, MUTE_RECT)) {
       muted = !muted;
       if (muted) pullStop();
@@ -632,8 +557,10 @@
     const d = Math.hypot(dx, dy);
     if (d > MAX_DRAG) { dx = dx / d * MAX_DRAG; dy = dy / d * MAX_DRAG; }
     let tx = ANCHOR.x + dx, ty = ANCHOR.y + dy;
-    ty = Math.min(ty, 470 - BIRD_R - 2);
-    if (tx < 40) tx = 40;
+    // 蓄力方案 A：力度只由「相对 ANCHOR 的位移」决定，用 MAX_DRAG 封顶（上面已按 |d| 封过）。
+    // 不再把拖动点 clamp 到屏幕左缘（tx >= 40）—— 那会截断拉弓位移：
+    // 弹弓移到左侧（slingX 变小）时，向左拉弓的空间被压到只剩 30px，永远蓄不满力。
+    ty = Math.min(ty, 470 - BIRD_R - 2);   // 保留：不让奶龙被拖进发射台岛面（岛 top = 470）
     // 只更新目标点，奶龙在 update() 里阻尼跟随（回弹手感的来源）
     dragTarget = { x: tx, y: ty };
   });
@@ -1027,55 +954,56 @@
     }
     ctx.restore();
   }
-  // 拖拽指示：一条从奶龙朝发射方向的渐变箭头（越长越粗越红 = 力度越大），
-  // 外加奶龙身上一圈力度环。拉力不足 MIN_PULL 时整体变灰，
-  // 并在锚点处画出虚线死区 —— 一眼看出「拉出这个圈才会发射」。
-  function drawLaunchArrow() {
-    const bx = bird.position.x, by = bird.position.y;
-    const dx = ANCHOR.x - bx, dy = ANCHOR.y - by;
-    const pull = Math.hypot(dx, dy);
-    if (pull < 1) return;
-    const t = Math.min(1, pull / MAX_DRAG);
+  // 蓄力条：屏幕左侧一条竖直的力度条，只在拉弓时出现、松手即消失。
+  // 从底部向上填充，颜色沿条身由绿(底)渐变到红(顶)；条上那道横线是 MIN_PULL 死区，
+  // 拉到线以上才算有效发射。力度取「指针位置」dragTarget —— 与 endDrag 判定发射用的是同一个量，
+  // 所以条上读到的就是实际发射力度（奶龙是阻尼跟随、会落后指针，用奶龙位置会偏低）。
+  // 旧的「发射方向箭头 + 力度环」已移除，瞄准交给 drawTrajectory 的虚线弹道。
+  const BAR_X = 8, BAR_W = 24, BAR_TOP = 150, BAR_BOT = 460, BAR_PAD = 3, BAR_R = 10;
+  function drawPowerBar() {
+    const pull = Math.hypot(dragTarget.x - ANCHOR.x, dragTarget.y - ANCHOR.y);
+    const t = Math.max(0, Math.min(1, pull / MAX_DRAG));
     const ok = pull >= MIN_PULL;
-    const ux = dx / pull, uy = dy / pull;
-    const len = 46 + 150 * t;
-    const w = 4 + 9 * t;
-    const r = Math.round(95 + 97 * t), g = Math.round(132 - 75 * t), b = Math.round(112 - 69 * t);
-    const col = ok ? 'rgba(' + r + ',' + g + ',' + b + ',0.92)' : 'rgba(120,115,105,0.45)';
-    const ex = bx + ux * len, ey = by + uy * len;
+
+    const innerX = BAR_X + BAR_PAD, innerW = BAR_W - BAR_PAD * 2;
+    const innerTop = BAR_TOP + BAR_PAD, innerBot = BAR_BOT - BAR_PAD;
+    const innerH = innerBot - innerTop;
+
     ctx.save();
-    ctx.lineCap = 'round';
-    // 杆身
-    ctx.strokeStyle = col;
-    ctx.lineWidth = w;
-    ctx.beginPath();
-    ctx.moveTo(bx + ux * (BIRD_R + 3), by + uy * (BIRD_R + 3));
-    ctx.lineTo(ex, ey);
-    ctx.stroke();
-    // 箭头
-    ctx.fillStyle = col;
-    ctx.beginPath();
-    ctx.moveTo(ex + ux * (12 + w), ey + uy * (12 + w));
-    ctx.lineTo(ex + uy * w * 1.6, ey - ux * w * 1.6);
-    ctx.lineTo(ex - uy * w * 1.6, ey + ux * w * 1.6);
-    ctx.closePath();
+    // 轨道 + 描边（沿用芯片那套深墨底 / 米白边）
+    ctx.fillStyle = 'rgba(47,42,34,0.5)';
+    roundRect(BAR_X, BAR_TOP, BAR_W, BAR_BOT - BAR_TOP, BAR_R);
     ctx.fill();
-    // 力度环
-    const rr = BIRD_R + 10;
-    ctx.lineWidth = 3;
-    ctx.strokeStyle = 'rgba(60,55,45,0.16)';
-    ctx.beginPath(); ctx.arc(bx, by, rr, 0, Math.PI * 2); ctx.stroke();
-    ctx.strokeStyle = col;
-    ctx.beginPath(); ctx.arc(bx, by, rr, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * t); ctx.stroke();
-    ctx.restore();
-    if (!ok) {
+    ctx.strokeStyle = 'rgba(253,248,239,0.35)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // 填充：底部向上，绿→红渐变（整条渐变固定，填充只是把它一段段露出来）
+    const fh = innerH * t;
+    if (fh > 0.5) {
       ctx.save();
-      ctx.setLineDash([5, 6]);
-      ctx.lineWidth = 1.6;
-      ctx.strokeStyle = 'rgba(120,115,105,0.35)';
-      ctx.beginPath(); ctx.arc(ANCHOR.x, ANCHOR.y, MIN_PULL, 0, Math.PI * 2); ctx.stroke();
+      roundRect(innerX, innerBot - fh, innerW, fh, Math.min(BAR_R - BAR_PAD, fh / 2));
+      ctx.clip();
+      const grad = ctx.createLinearGradient(0, innerBot, 0, innerTop);
+      grad.addColorStop(0, '#5f8470');   // 底：青绿
+      grad.addColorStop(1, '#c0392b');   // 顶：砖红
+      ctx.fillStyle = grad;
+      ctx.fillRect(innerX, innerBot - fh, innerW, fh);
       ctx.restore();
     }
+
+    // MIN_PULL 死区线：拉到这条线以上才会发射
+    const deadY = innerBot - innerH * (MIN_PULL / MAX_DRAG);
+    ctx.save();
+    ctx.setLineDash([4, 4]);
+    ctx.lineWidth = 1.6;
+    ctx.strokeStyle = ok ? 'rgba(253,248,239,0.85)' : 'rgba(253,248,239,0.45)';
+    ctx.beginPath();
+    ctx.moveTo(BAR_X - 4, deadY);
+    ctx.lineTo(BAR_X + BAR_W + 4, deadY);
+    ctx.stroke();
+    ctx.restore();
+    ctx.restore();
   }
   function drawParticles() {
     for (let i = 0; i < particles.length; i++) {
@@ -1122,6 +1050,7 @@
       chip(WORLD_W - 150, 12, 140, 34, '剩余 × ' + shotsLeft);
       chip(RESTART_RECT.x, RESTART_RECT.y, RESTART_RECT.w, RESTART_RECT.h, '↻ 重来');
       chip(MUTE_RECT.x, MUTE_RECT.y, MUTE_RECT.w, MUTE_RECT.h, muted ? '🔇' : '🔊');
+      chip(SELECT_RECT.x, SELECT_RECT.y, SELECT_RECT.w, SELECT_RECT.h, '☰ 选关');
       chip(FULLSCREEN_RECT.x, FULLSCREEN_RECT.y, FULLSCREEN_RECT.w, FULLSCREEN_RECT.h,
            isFullscreen() ? '⤡' : '⛶');
     }
@@ -1142,8 +1071,8 @@
     if (bird) drawBird(bird);
     if (state === 'dragging' || state === 'releasing') {
       drawTrajectory();
-      drawLaunchArrow();
     }
+    if (state === 'dragging') drawPowerBar();
     drawParticles();
     drawPopups();
     ctx.restore();
@@ -1169,6 +1098,33 @@
     popups = popups.filter(function (p) { return p.life > 0; });
   }
 
+  // ---------- 关卡进度（localStorage 长期记住；写不进去就退回只在内存里记）----------
+  const PROGRESS_KEY = 'ddd.progress.v1';
+  const progress = { cleared: [], stars: [] };
+  (function () {
+    for (let i = 0; i < LEVELS.length; i++) { progress.cleared[i] = false; progress.stars[i] = 0; }
+    try {
+      const raw = localStorage.getItem(PROGRESS_KEY);
+      if (!raw) return;
+      const o = JSON.parse(raw);
+      if (!o) return;
+      for (let i = 0; i < LEVELS.length; i++) {
+        progress.cleared[i] = !!(o.cleared && o.cleared[i]);
+        progress.stars[i] = Math.max(0, Math.min(3, (o.stars && o.stars[i]) | 0));
+      }
+    } catch (e) { /* 隐私模式 / 禁用 localStorage：静默降级为只在内存里记 */ }
+  })();
+  function saveProgress() {
+    try { localStorage.setItem(PROGRESS_KEY, JSON.stringify({ cleared: progress.cleared, stars: progress.stars })); }
+    catch (e) { }
+  }
+  // 渐进解锁：第 1 关永远开着，之后每关都要先通关前一关
+  function isUnlocked(i) { return i === 0 || !!progress.cleared[i - 1]; }
+  function firstUncleared() {
+    for (let i = 0; i < LEVELS.length; i++) { if (!progress.cleared[i]) return i; }
+    return 0;
+  }
+
   // ---------- 胜负与视频 ----------
   const startOverlay = document.getElementById('startOverlay');
   const loseOverlay = document.getElementById('loseOverlay');
@@ -1178,6 +1134,11 @@
   const levelScoreEl = document.getElementById('levelScore');
   const nextBtn = document.getElementById('nextBtn');
   const replayLevelBtn = document.getElementById('replayLevelBtn');
+  const selectOverlay = document.getElementById('selectOverlay');
+  const levelList = document.getElementById('levelList');
+  const startBtn = document.getElementById('startBtn');
+  const selectBtn = document.getElementById('selectBtn');
+  const selectClose = document.getElementById('selectClose');
   const winVideo = document.getElementById('winVideo');
   const videoOverlay = document.getElementById('videoOverlay');
   const playHint = document.getElementById('playHint');
@@ -1201,6 +1162,11 @@
     state = 'won';
     sWin();
     const n = starsFor();
+    // 记进度：通关打勾 + 记录最好星级（只增不减），并写进 localStorage
+    progress.cleared[levelIndex] = true;
+    progress.stars[levelIndex] = Math.max(progress.stars[levelIndex] || 0, n);
+    saveProgress();
+    syncStartLabel();
     const isLast = levelIndex >= LEVELS.length - 1;
     if (isLast) {
       showVideo();
@@ -1247,12 +1213,59 @@
     restart();
   }
 
+  // 从选关卡片或「下一关」进入某一关：把各个弹窗都收掉再重建关卡
+  function startLevel(i) {
+    const n = Math.max(0, Math.min(LEVELS.length - 1, i | 0));
+    // 保险：唯一的一道闸门。选关卡片的 disabled 只挡鼠标点击，
+    // 「下一关」按钮和以后新增的入口都从这里过，没解锁就一律进不去。
+    if (!isUnlocked(n)) return;
+    hideVideo();
+    loseOverlay.classList.add('hidden');
+    levelOverlay.classList.add('hidden');
+    startOverlay.classList.add('hidden');
+    if (selectOverlay) selectOverlay.classList.add('hidden');
+    score = 0;
+    buildLevel(n);
+    state = 'ready';
+  }
+
+  function renderLevelList() {
+    if (!levelList) return;
+    let h = '';
+    for (let i = 0; i < LEVELS.length; i++) {
+      const L = LEVELS[i];
+      const short = L.name.split('·').pop().trim();
+      const open = isUnlocked(i);
+      const got = progress.stars[i] || 0;
+      let right;
+      if (!open) right = '🔒 未解锁';
+      else if (!progress.cleared[i]) right = '未通关';
+      else right = '★'.repeat(got) + '☆'.repeat(3 - got);
+      h += '<button class="lvcard' + (open ? '' : ' locked') + '" data-i="' + i + '"' +
+           (open ? '' : ' disabled') + '>' +
+           '<span class="lvno">第 ' + (i + 1) + ' 关</span>' +
+           '<span class="lvname">' + short + '</span>' +
+           '<span class="lvmeta">奶龙 × ' + L.birds + ' · 木块 × ' + L.blocks.length + '</span>' +
+           '<span class="lvstar">' + right + '</span>' +
+           '</button>';
+    }
+    levelList.innerHTML = h;
+  }
+
+  // 开始界面的主按钮：有进度时明写「继续第 N 关」，指向哪一关不藏着
+  function syncStartLabel() {
+    if (!startBtn) return;
+    const any = progress.cleared.some(function (v) { return v; });
+    startBtn.textContent = any ? ('▶ 继续第 ' + (firstUncleared() + 1) + ' 关') : '▶ 开始游戏';
+  }
+
   // ---------- 按钮 ----------
-  document.getElementById('startBtn').addEventListener('click', function () {
+  startBtn.addEventListener('click', function () {
     ensureAudio();
     sClick();
-    startOverlay.classList.add('hidden');
+    startLevel(firstUncleared());
   });
+  syncStartLabel();
   // 开始界面里的全屏按钮（画布上的 ⛶ 芯片在弹窗盖住时点不到）
   (function () {
     const fsBtn = document.getElementById('fsBtn');
@@ -1272,11 +1285,39 @@
   });
   nextBtn.addEventListener('click', function () {
     sClick();
-    levelOverlay.classList.add('hidden');
-    buildLevel(levelIndex + 1);
-    state = 'ready';
+    startLevel(levelIndex + 1);
   });
   replayLevelBtn.addEventListener('click', function () { sClick(); restart(); });
+
+  // ---------- 选关（开始界面 + 关卡内都能进）----------
+  // selectFromGame 记录这次选关面板是从「开始界面」还是「关卡内」打开的，
+  // 关掉面板时据此决定回到关卡（原地继续）还是回到开始界面。
+  let selectFromGame = false;
+  function openSelect(fromGame) {
+    ensureAudio();
+    sClick();
+    renderLevelList();
+    selectFromGame = !!fromGame;
+    startOverlay.classList.add('hidden');
+    selectOverlay.classList.remove('hidden');
+  }
+  function closeSelect() {
+    sClick();
+    selectOverlay.classList.add('hidden');
+    if (selectFromGame) {
+      selectFromGame = false; // 从关卡内打开的：只收起面板，原地继续
+    } else {
+      startOverlay.classList.remove('hidden'); // 从开始界面打开的：回到开始界面
+    }
+  }
+  if (selectBtn) selectBtn.addEventListener('click', function () { openSelect(false); });
+  if (selectClose) selectClose.addEventListener('click', closeSelect);
+  if (levelList) levelList.addEventListener('click', function (e) {
+    const card = (e.target && e.target.closest) ? e.target.closest('.lvcard') : null;
+    if (!card || card.disabled) return;
+    sClick();
+    startLevel(parseInt(card.getAttribute('data-i'), 10) || 0);
+  });
 
   // ---------- 触屏按钮条（手机上替代画布右上角的三个芯片）----------
   (function () {
@@ -1285,6 +1326,7 @@
     const bMute = document.getElementById('tbMute');
     const bFull = document.getElementById('tbFull');
     const bRestart = document.getElementById('tbRestart');
+    const bSelect = document.getElementById('tbSelect');
     if (bFull && !canFullscreen) bFull.classList.add('hidden');
     const syncBar = function () {
       if (bMute) bMute.textContent = muted ? '🔇' : '🔊';
@@ -1299,6 +1341,10 @@
       ensureAudio(); toggleFullscreen(); sClick(); syncBar();
     });
     if (bRestart) bRestart.addEventListener('click', function () { sClick(); restart(); });
+    // 关卡内选关：只在奶龙待发射（state==='ready'）时生效，飞行中不打断
+    if (bSelect) bSelect.addEventListener('click', function () {
+      if (state === 'ready') openSelect(true);
+    });
     document.addEventListener('fullscreenchange', syncBar);
     document.addEventListener('webkitfullscreenchange', syncBar);
     syncBar();
